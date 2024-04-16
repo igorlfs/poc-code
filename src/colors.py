@@ -1,0 +1,6 @@
+WHITE = "#cdd6f4"
+BACKGROUND = "#313244"
+MANTLE = "#181825"
+CRUST = "#11111b"
+BASE = "#1e1e2e"
+ACCENT = "#89b4fa"

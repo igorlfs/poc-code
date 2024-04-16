@@ -12,8 +12,55 @@ python = "^3.11"
 plotly = "^5.20.0"
 pysubgroup = "^0.8.0"
 scikit-learn = "^1.4.1.post1"
+dash = "^2.16.1"
+tqdm = "^4.66.2"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.basedpyright]
+typeCheckingMode = "standard"
+
+[tool.ruff]
+exclude = ["./src/grouping/lib.py"]
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "C90",
+    "I",
+    "N",
+    "UP",
+    "ANN",
+    "S",
+    "B",
+    "A",
+    "C4",
+    "EM",
+    "ISC",
+    "ICN",
+    "INP",
+    "PIE",
+    "PYI",
+    "Q",
+    "RSE",
+    "RET",
+    "SIM",
+    "TCH",
+    "PTH",
+    "ARG",
+    "PD",
+    "PL",
+    "NPY",
+    "PERF",
+    "FURB",
+    "RUF",
+]
+ignore = [
+    "E501",  # Line too long
+    "S101",  # Use of assert
+    "PD008", # Pands loc vs at
+]

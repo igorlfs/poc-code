@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #1e1e2e;
+}
+
+h1,
+h2 {
+    color: #cdd6f4;
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+h2 {
+    font-weight: 400;
+}
+
+h1 {
+    font-size: 36pt;
+    font-weight: 800;
+}
+
+
+.Select-control {
+    background-color: #11111b !important;
+    color: #cdd6f4;
+}
+
+.Select-menu-outer {
+    background-color: #181825;
+    color: #cdd6f4;
+}
+
+.Select--multi .Select-value {
+    background-color: #181825;
+    color: #cdd6f4;
+    border: none;
+}
