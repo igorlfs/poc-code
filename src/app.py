@@ -26,6 +26,9 @@ def run() -> None:
         print(f"Unexpected error: {e}")
         return
 
+    features = dataset_df.columns.tolist()
+    features.remove("target")
+    dataset_with_errors_df = pd.concat([dataset_df, errors_df], axis=1)
     df_list = subgroup_discovery(dataset_df, errors_df, 20)
     subgroups_df = remove_redundant_subgroups(df_list)
 
@@ -48,6 +51,8 @@ def run() -> None:
 
     app.title = "Heisenpy"  # TODO temporary name
 
-    app.layout = create_layout(app, dataset_df, errors_df, subgroups_df, "setosa")
+    app.layout = create_layout(
+        app, dataset_with_errors_df, features, subgroups_df, "setosa"
+    )
 
     app.run(debug=True)

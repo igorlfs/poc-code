@@ -35,7 +35,11 @@ h1 {
 }
 
 .Select--multi .Select-value {
-    background-color: #181825;
+    background-color: #181825 !important;
     color: #cdd6f4;
     border: none;
+}
+
+.Select-value-label {
+    color: #cdd6f4 !important;
 }

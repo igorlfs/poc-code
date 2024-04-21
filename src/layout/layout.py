@@ -2,15 +2,15 @@ from dash import Dash, dcc, html
 from pandas import DataFrame
 
 from src.layout.components.dendogram import generate_dendrogram_figure
+from src.layout.components.dropdown import columns_dropdown, subgroups_dropdown
 from src.layout.components.table import data_table
-from src.layout.renderer import render_subgroups_dropdown
 from src.layout.subgroups import subgroups
 
 
 def create_layout(
     app: Dash,
-    dataset_df: DataFrame,
-    errors_df: DataFrame,
+    dataset_with_errors_df: DataFrame,
+    features: list[str],
     subgroups_df: DataFrame,
     current_class: str,
 ) -> html.Div:
@@ -26,6 +26,9 @@ def create_layout(
             "quality": "Qualidade",
         }
     )
+
+    x_column = features[0]
+    y_column = features[1]
 
     return html.Div(
         id="main-layout",
@@ -71,18 +74,16 @@ def create_layout(
                             ),
                         ],
                     ),
-                    render_subgroups_dropdown(
-                        app=app,
-                        dataset_df=dataset_df,
-                        subgroups_df=subgroups_df.query(
-                            f"`class` == {class_of_interest}"
-                        ),
+                    columns_dropdown(features, x_column, y_column),
+                    subgroups_dropdown(
+                        app,
+                        dataset_with_errors_df,
+                        subgroups_df.query(f"`class` == '{current_class}'"),
                     ),
                     subgroups(
-                        dataset_df=dataset_df,
-                        x_column="petal width (cm)",
-                        y_column="petal length (cm)",
-                        target=dataset_df.target.tolist(),
+                        dataset_with_errors_df,
+                        x_column,
+                        y_column,
                         subgroups=None,
                     ),
                 ],
