@@ -48,6 +48,6 @@ def run() -> None:
 
     app.title = "Heisenpy"  # TODO temporary name
 
-    app.layout = create_layout(app, dataset_df, subgroups_df, "setosa")
+    app.layout = create_layout(app, dataset_df, errors_df, subgroups_df, "setosa")
 
     app.run(debug=True)

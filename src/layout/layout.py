@@ -1,16 +1,18 @@
-from dash import Dash, html
+from dash import Dash, dcc, html
 from pandas import DataFrame
 
-from src.layout.renderer import (
-    render_dendogram,
-    render_subgroups_dropdown,
-    render_subgroups_table,
-)
-from src.layout.sugroups import subgroups
+from src.layout.components.dendogram import generate_dendrogram_figure
+from src.layout.components.table import data_table
+from src.layout.renderer import render_subgroups_dropdown
+from src.layout.subgroups import subgroups
 
 
 def create_layout(
-    app: Dash, dataset_df: DataFrame, subgroups_df: DataFrame, current_class: str
+    app: Dash,
+    dataset_df: DataFrame,
+    errors_df: DataFrame,
+    subgroups_df: DataFrame,
+    current_class: str,
 ) -> html.Div:
     table_subgroups_df = DataFrame(
         subgroups_df.query(f"`class` == '{current_class}'")[
@@ -50,17 +52,21 @@ def create_layout(
                                     "justify-content": "center",
                                     "align-items": "center",
                                 },
-                                children=[render_subgroups_table(table_subgroups_df)],
+                                children=[data_table(table_subgroups_df)],
                             ),
                             html.Div(
-                                className="dendogram-plot",
                                 style={
                                     "display": "flex",
                                     "justify-content": "center",
                                     "align-items": "center",
                                 },
                                 children=[
-                                    render_dendogram(subgroups_df, current_class)
+                                    dcc.Graph(
+                                        id="dendogram-plot",
+                                        figure=generate_dendrogram_figure(
+                                            subgroups_df, current_class
+                                        ),
+                                    ),
                                 ],
                             ),
                         ],

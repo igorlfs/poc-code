@@ -10,7 +10,7 @@ from sklearn.cluster import AgglomerativeClustering
 from src.colors import BASE, WHITE
 
 
-def generate_dendrogram(df_rules: DataFrame, current_class: str) -> Figure:
+def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figure:
     map_class_to_subgroup_set: dict[str, set] = {}
 
     for each_class in df_rules["class"].unique():
@@ -18,6 +18,7 @@ def generate_dendrogram(df_rules: DataFrame, current_class: str) -> Figure:
             df_rules.query(f"`class` == '{each_class}'")["subgroup"]
         )
 
+    # contains the subgroup sets outside the current class
     rules_of_interest = set()
     for each_class, subgroup_set in map_class_to_subgroup_set.items():
         if each_class != current_class:
@@ -74,8 +75,6 @@ def generate_dendrogram(df_rules: DataFrame, current_class: str) -> Figure:
 
     # create_dendrogram expects strings
     df_of_interest["subgroup"] = df_of_interest["subgroup"].astype(str)
-
-    # Plot the corresponding dendrogram
 
     # TODO "VER COM DANIEL QUESTÃO DA LINKAGE MATRIX"
     fig = ff.create_dendrogram(
