@@ -26,10 +26,7 @@ def run() -> None:
         print(f"Unexpected error: {e}")
         return
 
-    # subgroup discovery doesn't work if the names are strings
-    errors_df.columns = list(range(len(errors_df.columns)))
-
-    df_list = subgroup_discovery(dataset_df, errors_df, 3)
+    df_list = subgroup_discovery(dataset_df, errors_df, 20)
     subgroups_df = remove_redundant_subgroups(df_list)
 
     # adding string column with rules
