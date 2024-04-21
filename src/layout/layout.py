@@ -10,10 +10,10 @@ from src.layout.sugroups import subgroups
 
 
 def create_layout(
-    app: Dash, dataset_df: DataFrame, subgroups_df: DataFrame, class_of_interest: int
+    app: Dash, dataset_df: DataFrame, subgroups_df: DataFrame, current_class: str
 ) -> html.Div:
     table_subgroups_df = DataFrame(
-        subgroups_df.query(f"`class` == {class_of_interest}")[
+        subgroups_df.query(f"`class` == '{current_class}'")[
             ["subgroup_str", "size_sg", "mean_sg", "quality"]
         ]
     ).rename(
@@ -59,7 +59,9 @@ def create_layout(
                                     "justify-content": "center",
                                     "align-items": "center",
                                 },
-                                children=[render_dendogram(subgroups_df)],
+                                children=[
+                                    render_dendogram(subgroups_df, current_class)
+                                ],
                             ),
                         ],
                     ),

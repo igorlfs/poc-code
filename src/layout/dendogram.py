@@ -10,45 +10,42 @@ from sklearn.cluster import AgglomerativeClustering
 from src.colors import BASE, WHITE
 
 
-def sets_jaccard(a: set, b: set) -> float:
-    return len(a.intersection(b)) / len(a.union(b))
-
-
-def generate_dendrogram(df_rules: DataFrame) -> Figure:
-    set_dict = {}
-
-    df_rules = df_rules.replace(
-        {"class": {0: "setosa", 1: "versicolor", 2: "virginica"}}
-    )
+def generate_dendrogram(df_rules: DataFrame, current_class: str) -> Figure:
+    map_class_to_subgroup_set: dict[str, set] = {}
 
     for each_class in df_rules["class"].unique():
-        set_dict[each_class] = set(
-            df_rules.loc[df_rules["class"] == each_class, "subgroup"]
+        map_class_to_subgroup_set[each_class] = set(
+            df_rules.query(f"`class` == '{each_class}'")["subgroup"]
         )
-    rules_of_interest = (
-        set_dict["versicolor"].union(set_dict["virginica"]) - set_dict["setosa"]
-    )
-    df = df_rules.loc[  # noqa: PD901
-        df_rules["subgroup"].isin(rules_of_interest), ["subgroup", "covered"]
-    ]
-    df = df.drop_duplicates(subset="subgroup")  # noqa: PD901
+
+    rules_of_interest = set()
+    for each_class, subgroup_set in map_class_to_subgroup_set.items():
+        if each_class != current_class:
+            rules_of_interest = rules_of_interest.union(subgroup_set)
+    rules_of_interest = rules_of_interest - map_class_to_subgroup_set[current_class]
+
+    df_of_interest = DataFrame(
+        df_rules.query("subgroup in @rules_of_interest")[["subgroup", "covered"]]
+    ).drop_duplicates(subset="subgroup")
 
     # create linkage matrix and then plot the dendrogram
-    jaccard_generator1 = (
-        1 - sum(row1 & row2) / sum(row1 | row2)
-        for row1, row2 in combinations(df["covered"], 2)
+    jaccard_generator = (
+        1
+        - max(
+            len(set(row1[1].selectors).intersection(set(row2[1].selectors)))
+            / len(set(row1[1].selectors).union(set(row2[1].selectors))),
+            sum(row1[0] & row2[0]) / sum(row1[0] | row2[0]),
+        )
+        for row1, row2 in combinations(
+            zip(df_of_interest["covered"], df_of_interest["subgroup"]), 2
+        )
     )
-    jaccard_generator2 = (
-        1 - sets_jaccard(set(row1.selectors), set(row2.selectors))
-        for row1, row2 in combinations(df["subgroup"], 2)
-    )
-    flattened_matrix1 = np.fromiter(jaccard_generator1, dtype=np.float64)
-    flattened_matrix2 = np.fromiter(jaccard_generator2, dtype=np.float64)
-    flattened_matrix = np.minimum(flattened_matrix1, flattened_matrix2)
+    flattened_matrix = np.fromiter(jaccard_generator, dtype=float)
 
-    # since flattened_matrix is the flattened upper triangle of the matrix
-    # we need to expand it.
+    # since flattened_matrix is the flattened upper triangle of the matrix we need to expand it.
     normal_matrix = distance.squareform(flattened_matrix)
+
+    # TODO why is this commented out?
     # replacing zeros with ones at the diagonal.
     # normal_matrix += np.identity(len(df_interesse['covered']))
 
@@ -75,19 +72,8 @@ def generate_dendrogram(df_rules: DataFrame) -> Figure:
 
     linkage_matrix = np.column_stack([ac.children_, ac.distances_, counts])
 
-    # make the feature names shorter for the visualization
-    df.loc[:, "subgroup"] = df["subgroup"].apply(
-        lambda x: x.__str__().replace("sepal width (cm)", "sw")
-    )
-    df.loc[:, "subgroup"] = df["subgroup"].apply(
-        lambda x: x.__str__().replace("sepal length (cm)", "sl")
-    )
-    df.loc[:, "subgroup"] = df["subgroup"].apply(
-        lambda x: x.__str__().replace("petal width (cm)", "pw")
-    )
-    df.loc[:, "subgroup"] = df["subgroup"].apply(
-        lambda x: x.__str__().replace("petal length (cm)", "pl")
-    )
+    # create_dendrogram expects strings
+    df_of_interest["subgroup"] = df_of_interest["subgroup"].astype(str)
 
     # Plot the corresponding dendrogram
 
@@ -95,7 +81,7 @@ def generate_dendrogram(df_rules: DataFrame) -> Figure:
     fig = ff.create_dendrogram(
         X=normal_matrix,
         orientation="right",
-        labels=df.subgroup.tolist(),
+        labels=df_of_interest.subgroup.tolist(),
         colorscale=[
             "#89b4fa",
             "#89dceb",

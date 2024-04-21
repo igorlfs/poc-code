@@ -61,13 +61,13 @@ def render_subgroups_table(table_subgroups_df: DataFrame) -> html.Div:
     )
 
 
-def render_dendogram(subgroups_df: DataFrame) -> html.Div:
+def render_dendogram(subgroups_df: DataFrame, current_class: str) -> html.Div:
     return html.Div(
         className="dendogram-plot",
         children=[
             dcc.Graph(
                 id="dendogram-plot",
-                figure=generate_dendrogram(subgroups_df),
+                figure=generate_dendrogram(subgroups_df, current_class),
             ),
         ],
     )
