@@ -1,24 +1,25 @@
-from typing import Iterable
-
 import plotly.express as px
-import pysubgroup as ps
 from dash import dcc, html
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
-from src.colors import CRUST, WHITE
+from src.colors import CRUST, GREEN, RED, WHITE
+from src.layout.components.subgroups.util import extract_subgroup_limits
 
-message_for_not_implemented_exception = "I still can't deal with non numeric features!"
+RECTANGLE_LINE_WIDTH = 2.0
+
+# Rectangle displacement, estimated from someone eles's head
+DELTA = 0.02
 
 
-def subgroups(
+def plot_graph_and_subgroups(
     dataset_with_errors_df: DataFrame,
     x_column: str,
     y_column: str,
     subgroups: DataFrame | None,
     target_column: str = "target",
 ) -> Figure | html.Div:
-    figure = generate_subgroups(
+    figure = render_graph_and_subgroups(
         dataset_with_errors_df,
         x_column,
         y_column,
@@ -32,10 +33,10 @@ def subgroups(
             className="subgroups-2d-plot",
             style={
                 "display": "flex",
-                "justify-content": "center",
-                "align-items": "center",
-                "margin-top": "2%",
-                "margin-bottom": "4%",
+                "justifyContent": "center",
+                "alignItems": "center",
+                "marginTop": "2%",
+                "marginBottom": "4%",
             },
             children=[
                 dcc.Graph(
@@ -53,10 +54,7 @@ def subgroups(
     return figure
 
 
-# Plot a 2D scatterplot showing the samples, its classes, and the subgroups passed as parameters
-# to the functio
-# TODO simplify function
-def generate_subgroups(
+def render_graph_and_subgroups(
     dataset_with_errors_df: DataFrame,
     x_column: str,
     y_column: str,
@@ -94,4 +92,60 @@ def generate_subgroups(
     if subgroups is None:
         return fig
 
+    render_subgroups(subgroups, dataset_with_errors_df, x_column, y_column, fig)
+
     return fig
+
+
+def render_subgroups(
+    subgroups: DataFrame,
+    dataset_df: DataFrame,
+    x_column: str,
+    y_column: str,
+    fig: Figure,
+) -> None:
+    for subgroups_tuple in subgroups.itertuples(index=False):
+        subgroup, mean_sg, mean_dataset = subgroups_tuple
+
+        rule1, rule2 = extract_subgroup_limits(subgroup, dataset_df, x_column, y_column)
+
+        color = RED if mean_sg > mean_dataset else GREEN
+
+        if rule1.attribute_name == x_column:
+            x_init = rule1.lower_bound - DELTA
+            y_init = rule2.lower_bound - DELTA
+            width = rule1.upper_bound - rule1.lower_bound + 2 * DELTA
+            height = rule2.upper_bound - rule2.lower_bound + 2 * DELTA
+        else:
+            x_init = rule2.lower_bound - DELTA
+            y_init = rule1.lower_bound - DELTA
+            width = rule2.upper_bound - rule2.lower_bound + 2 * DELTA
+            height = rule1.upper_bound - rule1.lower_bound + 2 * DELTA
+
+        fig.add_shape(
+            type="rect",
+            x0=x_init,
+            y0=y_init,
+            x1=x_init + width,
+            y1=y_init + height,
+            line={
+                "color": color,
+                "width": RECTANGLE_LINE_WIDTH,
+            },
+        )
+        fig.add_annotation(
+            x=x_init,
+            y=y_init,
+            text=round(mean_sg, 4),
+            showarrow=False,
+            xanchor="right",
+            yanchor="top",
+        )
+        fig.add_annotation(
+            x=x_init + width,
+            y=y_init + height,
+            text=round(mean_dataset, 4),
+            showarrow=False,
+            xanchor="left",
+            yanchor="bottom",
+        )

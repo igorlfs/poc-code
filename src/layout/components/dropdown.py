@@ -3,11 +3,12 @@ from dash.dash import PreventUpdate
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
-from src.colors import ACCENT, CRUST
+from src.colors import ACCENT, CRUST, WHITE
+from src.layout.subgroups import plot_graph_and_subgroups
 
 
 def subgroups_dropdown(
-    app: Dash, dataset_df: DataFrame, subgroups_df: DataFrame
+    app: Dash, dataset_with_errors_df: DataFrame, subgroups_df: DataFrame
 ) -> html.Div:
     all_subgroups: list[str] = subgroups_df.subgroup_str.tolist()
 
@@ -16,7 +17,7 @@ def subgroups_dropdown(
         Input("plot-subgroups-button", "n_clicks"),
         State("subgroups-dropdown", "value"),
     )
-    def plot_subgroups(
+    def click_plot_subgroups(
         n_clicks: int, selected_subgroups: list[str]
     ) -> html.Div | Figure | None:
         # prevents first update, i.e., should only update on the click of the button
@@ -42,16 +43,15 @@ def subgroups_dropdown(
         x_column = first_subgroup.x_column.iloc[0]
         y_column = first_subgroup.y_column.iloc[0]
 
-        # FIX once we got sugroups() figured out
-        # return subgroups(
-        #     dataset_df=dataset_df,
-        #     x_column=x_column,
-        #     y_column=y_column,
-        #     target=dataset_df.target.tolist(),
-        #     subgroups=subgroups_df.loc[
-        #         df_rows, ["subgroup", "mean_sg", "mean_dataset"]
-        #     ],
-        # )
+        # TODO handle single feature
+        return plot_graph_and_subgroups(
+            dataset_with_errors_df,
+            x_column=x_column,
+            y_column=y_column,
+            subgroups=subgroups_df.loc[
+                df_rows, ["subgroup", "mean_sg", "mean_dataset"]
+            ],
+        )
 
     @app.callback(
         Output("subgroups-dropdown", "options"),
@@ -90,9 +90,10 @@ def subgroups_dropdown(
     return html.Div(
         id="subgroups-container",
         style={
+            "marginTop": "3%",
             "display": "flex",
-            "justify-content": "center",
-            "align-items": "center",
+            "justifyContent": "center",
+            "alignItems": "center",
         },
         children=[
             html.Div(
@@ -121,7 +122,7 @@ def subgroups_dropdown(
                     html.Div(
                         style={
                             "display": "flex",
-                            "justify-content": "flex-end",
+                            "justifyContent": "flex-end",
                         },
                         children=[
                             html.Button(
@@ -156,17 +157,17 @@ def columns_dropdown(features: list[str], x_column: str, y_column: str) -> html.
     # TODO filter columns so they have to be different
     return html.Div(
         style={
-            "margin-top": "2%",
-            "margin-bottom": "1%",
+            "marginTop": "2%",
+            "marginBottom": "1%",
             "display": "flex",
-            "place-content": "space-evenly",
+            "placeContent": "space-evenly",
         },
         children=[
             dcc.Dropdown(
                 id="xaxes-dropdown",
                 style={
                     "width": "600px",
-                    "color": "#cdd6f4",
+                    "color": WHITE,
                 },
                 value=x_column,
                 options=[
@@ -182,7 +183,7 @@ def columns_dropdown(features: list[str], x_column: str, y_column: str) -> html.
                 value=y_column,
                 style={
                     "width": "600px",
-                    "color": "#cdd6f4",
+                    "color": WHITE,
                 },
                 options=[
                     {

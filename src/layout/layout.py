@@ -2,9 +2,9 @@ from dash import Dash, dcc, html
 from pandas import DataFrame
 
 from src.layout.components.dendogram import generate_dendrogram_figure
-from src.layout.components.dropdown import columns_dropdown, subgroups_dropdown
+from src.layout.components.dropdown import subgroups_dropdown
 from src.layout.components.table import data_table
-from src.layout.subgroups import subgroups
+from src.layout.subgroups import plot_graph_and_subgroups
 
 
 def create_layout(
@@ -44,24 +44,24 @@ def create_layout(
                     html.Div(
                         style={
                             "display": "flex",
-                            "justify-content": "flex-auto",
-                            "place-content": "space-evenly",
+                            "justifyContent": "flex-auto",
+                            "placeContent": "space-evenly",
                         },
                         children=[
                             html.Div(
                                 className="subgroups-datatable",
                                 style={
                                     "display": "flex",
-                                    "justify-content": "center",
-                                    "align-items": "center",
+                                    "justifyContent": "center",
+                                    "alignItems": "center",
                                 },
                                 children=[data_table(table_subgroups_df)],
                             ),
                             html.Div(
                                 style={
                                     "display": "flex",
-                                    "justify-content": "center",
-                                    "align-items": "center",
+                                    "justifyContent": "center",
+                                    "alignItems": "center",
                                 },
                                 children=[
                                     dcc.Graph(
@@ -74,13 +74,12 @@ def create_layout(
                             ),
                         ],
                     ),
-                    columns_dropdown(features, x_column, y_column),
                     subgroups_dropdown(
                         app,
                         dataset_with_errors_df,
                         subgroups_df.query(f"`class` == '{current_class}'"),
                     ),
-                    subgroups(
+                    plot_graph_and_subgroups(
                         dataset_with_errors_df,
                         x_column,
                         y_column,
