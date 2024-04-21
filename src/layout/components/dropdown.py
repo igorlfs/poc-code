@@ -3,8 +3,8 @@ from dash.dash import PreventUpdate
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
-from src.colors import ACCENT, CRUST, WHITE
-from src.layout.subgroups import plot_graph_and_subgroups
+from src.colors import ACCENT, CRUST
+from src.layout.components.graph import plot_graph_and_subgroups
 
 
 def subgroups_dropdown(
@@ -149,49 +149,5 @@ def subgroups_dropdown(
                     ),
                 ],
             )
-        ],
-    )
-
-
-def columns_dropdown(features: list[str], x_column: str, y_column: str) -> html.Div:
-    # TODO filter columns so they have to be different
-    return html.Div(
-        style={
-            "marginTop": "2%",
-            "marginBottom": "1%",
-            "display": "flex",
-            "placeContent": "space-evenly",
-        },
-        children=[
-            dcc.Dropdown(
-                id="xaxes-dropdown",
-                style={
-                    "width": "600px",
-                    "color": WHITE,
-                },
-                value=x_column,
-                options=[
-                    {
-                        "label": rule,
-                        "value": rule,
-                    }
-                    for rule in features
-                ],
-            ),
-            dcc.Dropdown(
-                id="yaxes-dropdown",
-                value=y_column,
-                style={
-                    "width": "600px",
-                    "color": WHITE,
-                },
-                options=[
-                    {
-                        "label": rule,
-                        "value": rule,
-                    }
-                    for rule in features
-                ],
-            ),
         ],
     )

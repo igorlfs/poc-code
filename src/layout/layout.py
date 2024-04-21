@@ -3,8 +3,8 @@ from pandas import DataFrame
 
 from src.layout.components.dendogram import generate_dendrogram_figure
 from src.layout.components.dropdown import subgroups_dropdown
+from src.layout.components.graph import plot_graph_and_subgroups
 from src.layout.components.table import data_table
-from src.layout.subgroups import plot_graph_and_subgroups
 
 
 def create_layout(
