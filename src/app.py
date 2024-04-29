@@ -9,7 +9,7 @@ from src.layout.layout import create_layout
 
 
 def run() -> None:
-    dataset_file_path, errors_file_path = get_args()
+    dataset_file_path, errors_file_path, target_column = get_args()
     dataset_df: DataFrame
     errors_df: DataFrame
 
@@ -27,9 +27,9 @@ def run() -> None:
         return
 
     features = dataset_df.columns.tolist()
-    features.remove("target")
+    features.remove(target_column)
     dataset_with_errors_df = pd.concat([dataset_df, errors_df], axis=1)
-    df_list = subgroup_discovery(dataset_df, errors_df, 20)
+    df_list = subgroup_discovery(dataset_df, errors_df, 20, target_column)
     subgroups_df = remove_redundant_subgroups(df_list)
 
     # adding string column with rules
@@ -52,8 +52,9 @@ def run() -> None:
 
     app.title = "Heisenpy"  # TODO temporary name
 
+    # TODO current class should obviously be configurable
     app.layout = create_layout(
-        app, dataset_with_errors_df, features, subgroups_df, "setosa"
+        app, dataset_with_errors_df, features, subgroups_df, "setosa", target_column
     )
 
     app.run(debug=True)

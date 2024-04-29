@@ -66,3 +66,5 @@ ignore = [
     "S101",  # Use of assert
     "PD008", # Pands loc vs at
 ]
+[tool.ruff.lint.pylint]
+max-args = 6

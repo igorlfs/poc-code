@@ -8,7 +8,10 @@ from src.layout.components.graph import plot_graph_and_subgroups
 
 
 def subgroups_dropdown(
-    app: Dash, dataset_with_errors_df: DataFrame, subgroups_df: DataFrame
+    app: Dash,
+    dataset_with_errors_df: DataFrame,
+    subgroups_df: DataFrame,
+    target_column: str,
 ) -> html.Div:
     all_subgroups: list[str] = subgroups_df.subgroup_str.tolist()
 
@@ -46,11 +49,10 @@ def subgroups_dropdown(
         # TODO handle single feature
         return plot_graph_and_subgroups(
             dataset_with_errors_df,
-            x_column=x_column,
-            y_column=y_column,
-            subgroups=subgroups_df.loc[
-                df_rows, ["subgroup", "mean_sg", "mean_dataset"]
-            ],
+            x_column,
+            y_column,
+            subgroups_df.loc[df_rows, ["subgroup", "mean_sg", "mean_dataset"]],
+            target_column,
         )
 
     @app.callback(

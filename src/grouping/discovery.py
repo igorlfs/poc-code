@@ -6,9 +6,9 @@ from src.grouping.lib import BidirectionalQFNumeric
 
 
 def subgroup_discovery(
-    dataset_df: DataFrame, errors_df: DataFrame, set_size: int
+    dataset_df: DataFrame, errors_df: DataFrame, set_size: int, target_column: str
 ) -> list[DataFrame]:
-    dataset_clone_df = dataset_df.drop("target", axis=1)
+    dataset_clone_df = dataset_df.drop(target_column, axis=1)
 
     df_rules_list: list[DataFrame] = []
 

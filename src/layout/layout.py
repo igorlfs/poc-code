@@ -13,6 +13,7 @@ def create_layout(
     features: list[str],
     subgroups_df: DataFrame,
     current_class: str,
+    target_column: str,
 ) -> html.Div:
     table_subgroups_df = DataFrame(
         subgroups_df.query(f"`class` == '{current_class}'")[
@@ -78,12 +79,14 @@ def create_layout(
                         app,
                         dataset_with_errors_df,
                         subgroups_df.query(f"`class` == '{current_class}'"),
+                        target_column,
                     ),
                     plot_graph_and_subgroups(
                         dataset_with_errors_df,
                         x_column,
                         y_column,
-                        subgroups=None,
+                        None,
+                        target_column,
                     ),
                 ],
             ),
