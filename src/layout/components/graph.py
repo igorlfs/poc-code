@@ -1,4 +1,3 @@
-import plotly.express as px
 from dash import dcc, html
 from pandas import DataFrame
 from plotly.graph_objs import Figure
@@ -61,26 +60,36 @@ def render_graph_and_subgroups(
     target_column: str,
     subgroups: DataFrame | None,
 ) -> Figure:
-    classes = dataset_with_errors_df[target_column].tolist()
-    errors = [
-        row[classes[i]] for i, (_, row) in enumerate(dataset_with_errors_df.iterrows())
+    colors: list[list[str]] = [
+        ["#89b4fa", "#1e66f5"],
+        ["#f9e2af", "#df8e1d"],
+        ["#cba6f7", "#8839ef"],
+        ["#f38ba8", "#d20f39"],
+        ["#a6e3a1", "#40a02b"],
+        ["#fab387", "#fe640b"],
+        ["#89dceb", "#04a5e5"],
+        ["#eba0ac", "#e64553"],
     ]
+    fig = Figure()
+    for class_index, class_name in enumerate(
+        dataset_with_errors_df[target_column].unique()
+    ):
+        class_df = dataset_with_errors_df.query(f"{target_column} == '{class_name}'")
+        errors = class_df[class_name].tolist()
+        color = colors[class_index % len(colors)]
+        fig.add_scatter(
+            x=class_df[x_column],
+            y=class_df[y_column],
+            name=f"{class_name}",
+            text=errors,
+            mode="markers",
+            marker={
+                "size": 16,
+                "color": errors,
+                "colorscale": color,
+            },
+        )
 
-    fig = px.scatter(
-        dataset_with_errors_df,
-        x=x_column,
-        y=y_column,
-        color=errors,
-        color_continuous_scale=[
-            "#df8e1d",
-            "#8839ef",
-        ],
-    )
-    fig.update_traces(
-        marker={
-            "size": 10,
-        },
-    )
     fig.update_layout(
         font_color=WHITE,
         plot_bgcolor=CRUST,
