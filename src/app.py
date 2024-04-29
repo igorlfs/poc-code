@@ -32,6 +32,11 @@ def run() -> None:
     df_list = subgroup_discovery(dataset_df, errors_df, 20, target_column)
     subgroups_df = remove_redundant_subgroups(df_list)
 
+    # Remove subgroups with only group, so we don't have to worry about visualization
+    subgroups_df = DataFrame(
+        subgroups_df[subgroups_df["subgroup"].apply(lambda x: len(x.selectors) > 1)]
+    )
+
     # adding string column with rules
     subgroups_df["subgroup_str"] = subgroups_df.subgroup.astype(str)
 

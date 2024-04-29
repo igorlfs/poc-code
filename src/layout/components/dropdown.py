@@ -46,7 +46,6 @@ def subgroups_dropdown(
         x_column = first_subgroup.x_column.iloc[0]
         y_column = first_subgroup.y_column.iloc[0]
 
-        # TODO handle single feature
         return plot_graph_and_subgroups(
             dataset_with_errors_df,
             x_column,
