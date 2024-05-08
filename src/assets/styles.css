@@ -30,7 +30,7 @@ h1 {
 }
 
 .Select-menu-outer {
-    background-color: #181825;
+    background-color: #181825 !important;
     color: #cdd6f4;
 }
 

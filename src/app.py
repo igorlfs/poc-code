@@ -49,7 +49,6 @@ def run() -> None:
         subgroups_df["x_column"].at[idx] = rules[0].attribute_name
         subgroups_df["y_column"].at[idx] = rules[1].attribute_name
 
-    # TODO figure out why css is getting partially loaded on init
     app = Dash(__name__)
 
     app.title = "Heisenpy"  # TODO temporary name
