@@ -5,12 +5,18 @@ from pathlib import Path
 def get_args() -> tuple[Path, Path, str]:
     argparser = ArgumentParser(description="Visualize uncertainty regions in ML models")
     argparser.add_argument(
-        "--data", dest="data", required=True, type=Path, help="Path to dataset"
+        "-d", "--data", dest="data", required=True, type=Path, help="Path to dataset"
     )
     argparser.add_argument(
-        "--errors", dest="errors", required=True, type=Path, help="Path to model errros"
+        "-e",
+        "--errors",
+        dest="errors",
+        required=True,
+        type=Path,
+        help="Path to model errros",
     )
     argparser.add_argument(
+        "-t",
         "--target",
         dest="target",
         required=False,
