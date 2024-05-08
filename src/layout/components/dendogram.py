@@ -54,7 +54,7 @@ def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figur
     ac = AgglomerativeClustering(
         distance_threshold=0,
         metric="precomputed",
-        n_clusters=None,  # type: ignore
+        n_clusters=None,  # pyright: ignore
         linkage="average",
     )
     ac.fit(normal_matrix)
