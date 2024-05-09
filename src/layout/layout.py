@@ -34,14 +34,12 @@ def create_layout(
     return html.Div(
         id="main-layout",
         style={
+            "marginTop": "3%",
             "display": "flex-col",
         },
         children=[
             html.Div(
                 children=[
-                    html.H1(
-                        "Heisenpy",
-                    ),
                     html.Div(
                         style={
                             "display": "flex",
