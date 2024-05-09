@@ -26,6 +26,18 @@ def run() -> None:
         print(f"Unexpected error: {e}")
         return
 
+    if target_column not in dataset_df.columns:
+        print(f"Missing target column '{target_column}' in dataset")
+        return
+
+    if current_class not in errors_df.columns:
+        print(f"Missing current column '{current_class}' in errors dataframe")
+        return
+
+    if current_class not in dataset_df[target_column].unique():
+        print(f"Current class '{current_class}' doesn't appear in dataset")
+        return
+
     features = dataset_df.columns.tolist()
     features.remove(target_column)
     dataset_with_errors_df = pd.concat([dataset_df, errors_df], axis=1)
