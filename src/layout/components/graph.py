@@ -116,20 +116,22 @@ def render_subgroups(
     for subgroups_tuple in subgroups.itertuples(index=False):
         subgroup, mean_sg, mean_dataset = subgroups_tuple
 
-        rule1, rule2 = extract_subgroup_limits(subgroup, dataset_df, x_column, y_column)
+        rule1, rule2, attribute = extract_subgroup_limits(
+            subgroup, dataset_df, x_column, y_column
+        )
 
         color = RED if mean_sg > mean_dataset else GREEN
 
-        if rule1.attribute_name == x_column:
-            x_init = rule1.lower_bound - DELTA
-            y_init = rule2.lower_bound - DELTA
-            width = rule1.upper_bound - rule1.lower_bound + 2 * DELTA
-            height = rule2.upper_bound - rule2.lower_bound + 2 * DELTA
+        if attribute == x_column:
+            x_init = rule1.lower - DELTA
+            y_init = rule2.lower - DELTA
+            width = rule1.upper - rule1.lower + 2 * DELTA
+            height = rule2.upper - rule2.lower + 2 * DELTA
         else:
-            x_init = rule2.lower_bound - DELTA
-            y_init = rule1.lower_bound - DELTA
-            width = rule2.upper_bound - rule2.lower_bound + 2 * DELTA
-            height = rule1.upper_bound - rule1.lower_bound + 2 * DELTA
+            x_init = rule2.lower - DELTA
+            y_init = rule1.lower - DELTA
+            width = rule2.upper - rule2.lower + 2 * DELTA
+            height = rule1.upper - rule1.lower + 2 * DELTA
 
         fig.add_shape(
             type="rect",

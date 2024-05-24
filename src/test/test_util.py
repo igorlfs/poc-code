@@ -1,5 +1,5 @@
-import pysubgroup as ps
 from pandas import DataFrame
+from pysubgroup import Conjunction, IntervalSelector
 
 from src.layout.components.subgroups.util import extract_subgroup_limits
 
@@ -11,19 +11,19 @@ A_UPPER_BOUND = 3
 
 
 def test_extract_bounded_subgroups() -> None:
-    df = DataFrame()  # noqa: PD901
+    df = DataFrame()
 
-    selectors = [
-        ps.IntervalSelector("b", B_LOWER_BOUND, B_UPPER_BOUND),
-        ps.IntervalSelector("a", A_LOWER_BOUND, A_UPPER_BOUND),
+    selectors: list[IntervalSelector] = [
+        IntervalSelector("b", B_LOWER_BOUND, B_UPPER_BOUND),
+        IntervalSelector("a", A_LOWER_BOUND, A_UPPER_BOUND),
     ]
 
-    subgroup = ps.Conjunction(selectors)
+    subgroup = Conjunction(selectors)
 
-    rule1, rule2 = extract_subgroup_limits(subgroup, df, "", "")
+    rule1, rule2, _ = extract_subgroup_limits(subgroup, df, "", "")
 
-    assert rule1.lower_bound == B_LOWER_BOUND
-    assert rule1.upper_bound == B_UPPER_BOUND
+    assert rule1.lower == B_LOWER_BOUND
+    assert rule1.upper == B_UPPER_BOUND
 
-    assert rule2.lower_bound == A_LOWER_BOUND
-    assert rule2.upper_bound == A_UPPER_BOUND
+    assert rule2.lower == A_LOWER_BOUND
+    assert rule2.upper == A_UPPER_BOUND
