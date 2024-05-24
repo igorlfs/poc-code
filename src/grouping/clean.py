@@ -1,5 +1,3 @@
-from typing import Hashable
-
 import pandas as pd
 from pandas import DataFrame
 from tqdm import tqdm
@@ -16,9 +14,6 @@ def remove_redundant_subgroups(df_list: list[DataFrame]) -> DataFrame:
 
         row_subgroup = rule_row["subgroup"]
         row_covered = rule_row["covered"]
-
-        # variable must be Hashable to create a set
-        assert isinstance(row_subgroup, Hashable)
 
         for rule in list_of_rules:
             percent_equals = sum(row_covered & rule["covered"]) / sum(
