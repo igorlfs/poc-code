@@ -80,6 +80,9 @@ def render_graph_and_subgroups(
             },
         )
 
+    fig.update_xaxes(title=x_column)
+    fig.update_yaxes(title=y_column)
+
     fig.update_layout(
         font_color=WHITE,
         plot_bgcolor=CRUST,
