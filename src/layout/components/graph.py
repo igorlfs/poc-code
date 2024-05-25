@@ -5,7 +5,7 @@ from plotly.graph_objs import Figure
 from src.colors import BACKGROUND, CRUST, GREEN, RED, WHITE
 from src.layout.components.subgroups.util import extract_subgroup_limits
 
-RECTANGLE_LINE_WIDTH = 2.0
+RECTANGLE_LINE_WIDTH = 2.5
 
 # Rectangle displacement, estimated from someone eles's head
 DELTA = 0.02
@@ -107,13 +107,13 @@ def render_subgroups(
     fig: Figure,
 ) -> None:
     for subgroups_tuple in subgroups.itertuples(index=False):
-        subgroup, mean_sg, mean_dataset = subgroups_tuple
+        subgroup, mean_subgroup, mean_dataset = subgroups_tuple
 
         rule1, rule2, attribute = extract_subgroup_limits(
             subgroup, dataset_df, x_column, y_column
         )
 
-        color = RED if mean_sg > mean_dataset else GREEN
+        color = RED if mean_subgroup > mean_dataset else GREEN
 
         if attribute == x_column:
             x_init = rule1.lower - DELTA
@@ -140,7 +140,7 @@ def render_subgroups(
         fig.add_annotation(
             x=x_init,
             y=y_init,
-            text=f"<b>{round(mean_sg, 4)}</b>",
+            text=f"<b>{round(mean_subgroup, 4)}</b>",
             bgcolor=BACKGROUND,
             showarrow=False,
             xanchor="right",
