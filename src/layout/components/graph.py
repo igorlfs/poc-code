@@ -29,22 +29,12 @@ def plot_graph_and_subgroups(
     # First plot should create html.Div with no plot
     if subgroups is None:
         return html.Div(
-            className="subgroups-2d-plot",
-            style={
-                "display": "flex",
-                "justifyContent": "center",
-                "alignItems": "center",
-                "marginTop": "2%",
-                "marginBottom": "4%",
-            },
+            className="flex justify-center mt-10 mb-20",
             children=[
                 dcc.Graph(
                     id="subgroups-plot",
                     figure=figure,
-                    style={
-                        "width": "1400px",
-                        "height": "700px",
-                    },
+                    className="w-[1400px] h-[700px]",
                 ),
             ],
         )

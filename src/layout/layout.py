@@ -32,39 +32,21 @@ def create_layout(
     y_column = features[1]
 
     return html.Div(
-        id="main-layout",
-        style={
-            "marginTop": "3%",
-            "display": "flex-col",
-        },
+        className="flex-col mt-12",
         children=[
             html.Div(
                 children=[
                     html.Div(
-                        style={
-                            "display": "flex",
-                            "justifyContent": "flex-auto",
-                            "placeContent": "space-evenly",
-                        },
+                        className="flex flex-auto place-content-evenly",
                         children=[
                             html.Div(
-                                className="subgroups-datatable",
-                                style={
-                                    "display": "flex",
-                                    "justifyContent": "center",
-                                    "alignItems": "center",
-                                },
+                                className="flex justify-center items-center",
                                 children=[data_table(table_subgroups_df)],
                             ),
                             html.Div(
-                                style={
-                                    "display": "flex",
-                                    "justifyContent": "center",
-                                    "alignItems": "center",
-                                },
+                                className="flex justify-center",
                                 children=[
                                     dcc.Graph(
-                                        id="dendogram-plot",
                                         figure=generate_dendrogram_figure(
                                             subgroups_df, current_class
                                         ),

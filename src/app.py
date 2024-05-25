@@ -61,7 +61,10 @@ def run() -> None:
         subgroups_df["x_column"].at[idx] = rules[0].attribute_name
         subgroups_df["y_column"].at[idx] = rules[1].attribute_name
 
-    app = Dash(__name__)
+    app = Dash(
+        __name__,
+        external_scripts=[{"src": "https://cdn.tailwindcss.com"}],
+    )
 
     app.title = "Heisenpy"  # TODO temporary name
 

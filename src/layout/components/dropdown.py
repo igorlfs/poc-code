@@ -89,20 +89,10 @@ def subgroups_dropdown(
         ].subgroup_str.tolist()
 
     return html.Div(
-        id="subgroups-container",
-        style={
-            "marginTop": "3%",
-            "display": "flex",
-            "justifyContent": "center",
-            "alignItems": "center",
-        },
+        className="mt-12 flex justify-center",
         children=[
             html.Div(
-                className="subgroups-search",
-                style={
-                    "display": "flex-row",
-                    "width": "80%",
-                },
+                className="flex-row w-[80%]",
                 children=[
                     dcc.Dropdown(
                         id="subgroups-dropdown",
@@ -117,34 +107,16 @@ def subgroups_dropdown(
                         multi=True,
                         placeholder="Selecionar...",
                         style={
-                            "border": "none",
+                            "border": "none",  # oddly tailwind can't handle this situation
                         },
                     ),
                     html.Div(
-                        style={
-                            "display": "flex",
-                            "justifyContent": "flex-end",
-                        },
+                        className="flex justify-end",
                         children=[
                             html.Button(
-                                className="dropdown-button",
+                                className=f"mt-6 text-center uppercase text-[20pt] font-medium p-2 rounded-lg cursor-pointer text-[{CRUST}] bg-[{ACCENT}]",
                                 children=["Plot"],
                                 id="plot-subgroups-button",
-                                style={
-                                    "marginTop": "1%",
-                                    "textAlign": "center",
-                                    "display": "inline-block",
-                                    "backgroundColor": ACCENT,
-                                    "fontSize": "20pt",
-                                    "fontFamily": "Ubuntu",
-                                    "fontWeight": "500",
-                                    "color": CRUST,
-                                    "textTransform": "uppercase",
-                                    "padding": "10px",
-                                    "borderRadius": "8px",
-                                    "border": "none",
-                                    "cursor": "pointer",
-                                },
                             ),
                         ],
                     ),
