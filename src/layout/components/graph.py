@@ -2,7 +2,7 @@ from dash import dcc, html
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
-from src.colors import CRUST, GREEN, RED, WHITE
+from src.colors import BACKGROUND, CRUST, GREEN, RED, WHITE
 from src.layout.components.subgroups.util import extract_subgroup_limits
 
 RECTANGLE_LINE_WIDTH = 2.0
@@ -140,7 +140,8 @@ def render_subgroups(
         fig.add_annotation(
             x=x_init,
             y=y_init,
-            text=round(mean_sg, 4),
+            text=f"<b>{round(mean_sg, 4)}</b>",
+            bgcolor=BACKGROUND,
             showarrow=False,
             xanchor="right",
             yanchor="top",
@@ -148,7 +149,8 @@ def render_subgroups(
         fig.add_annotation(
             x=x_init + width,
             y=y_init + height,
-            text=round(mean_dataset, 4),
+            text=f"<b>{round(mean_dataset, 4)}</b>",
+            bgcolor=BACKGROUND,
             showarrow=False,
             xanchor="left",
             yanchor="bottom",
