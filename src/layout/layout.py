@@ -37,14 +37,14 @@ def create_layout(
             html.Div(
                 children=[
                     html.Div(
-                        className="flex flex-auto place-content-evenly",
+                        className="flex xl:flex-row xl:place-content-evenly flex-col",
                         children=[
                             html.Div(
                                 className="flex justify-center items-center",
                                 children=[data_table(table_subgroups_df)],
                             ),
                             html.Div(
-                                className="flex justify-center",
+                                className="flex justify-center mt-10 xl:mt-0",
                                 children=[
                                     dcc.Graph(
                                         figure=generate_dendrogram_figure(
