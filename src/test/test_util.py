@@ -11,7 +11,7 @@ A_UPPER_BOUND = 3
 
 
 def test_extract_bounded_subgroups() -> None:
-    df = DataFrame()
+    df = DataFrame()  # noqa: PD901
 
     selectors: list[IntervalSelector] = [
         IntervalSelector("b", B_LOWER_BOUND, B_UPPER_BOUND),
