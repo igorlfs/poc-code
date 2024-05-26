@@ -3,7 +3,6 @@ from dash.dash import PreventUpdate
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
-from src.colors import ACCENT, CRUST
 from src.layout.components.graph import plot_graph_and_subgroups
 
 
@@ -89,10 +88,10 @@ def subgroups_dropdown(
         ].subgroup_str.tolist()
 
     return html.Div(
-        className="mt-12 flex justify-center",
+        className="mt-12 flex items-center place-content-center",
         children=[
             html.Div(
-                className="flex-row w-[80%]",
+                className="w-[70%]",
                 children=[
                     dcc.Dropdown(
                         id="subgroups-dropdown",
@@ -106,21 +105,17 @@ def subgroups_dropdown(
                         value=[],
                         multi=True,
                         placeholder="Selecionar...",
-                        style={
-                            "border": "none",  # oddly tailwind can't handle this situation
-                        },
-                    ),
-                    html.Div(
-                        className="flex justify-end",
-                        children=[
-                            html.Button(
-                                className=f"mt-6 text-center uppercase text-[20pt] font-medium p-2 rounded-lg cursor-pointer text-[{CRUST}] bg-[{ACCENT}]",
-                                children=["Plot"],
-                                id="plot-subgroups-button",
-                            ),
-                        ],
                     ),
                 ],
-            )
+            ),
+            html.Div(
+                children=[
+                    html.Button(
+                        className="mx-3 text-center uppercase text-[20pt] font-medium p-2 rounded-lg cursor-pointer",
+                        children=["Plot"],
+                        id="plot-subgroups-button",
+                    ),
+                ],
+            ),
         ],
     )
