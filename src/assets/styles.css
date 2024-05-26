@@ -1,45 +1,68 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
+:root {
+    --text: #cdd6f4;
+    --subtext: #bac2de;
+    --important: #f38ba8;
+    --accent: #89b4fa;
+    --base: #1e1e2e;
+    --mantle: #181825;
+    --crust: #11111b;
+}
+
 body {
-    font-family: 'Outfit', sans-serif;
-    background-color: #1e1e2e;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: var(--base);
 }
-
-h1,
-h2 {
-    color: #cdd6f4;
-    font-family: 'Outfit', sans-serif;
-    text-transform: uppercase;
-    text-align: center;
-}
-
-h2 {
-    font-weight: 400;
-}
-
-h1 {
-    font-size: 36pt;
-    font-weight: 800;
-}
-
 
 .Select-control {
-    background-color: #11111b !important;
-    color: #cdd6f4;
+    background-color: var(--crust) !important;
+    border: none !important;
+}
+
+.Select.is-focused:not(.is-open)>.Select-control {
+    box-shadow: none !important;
+}
+
+.Select-placeholder {
+    color: var(--subtext) !important;
+}
+
+.Select-input {
+    color: var(--text) !important;
 }
 
 .Select-menu-outer {
-    background-color: #181825 !important;
-    color: #cdd6f4;
+    background-color: var(--mantle) !important;
+    color: var(--text) !important;
+    border: none !important;
 }
 
 .Select--multi .Select-value {
-    background-color: #181825 !important;
-    color: #cdd6f4;
-    border: none;
+    background-color: var(--mantle) !important;
+    color: var(--text) !important;
+    border: none !important;
+}
+
+.Select-clear-zone:hover {
+    color: var(--important) !important;
+}
+
+.Select-value-icon:hover {
+    color: var(--important) !important;
+    background-color: var(--crust) !important;
+}
+
+.Select-value-icon {
+    border-right-color: var(--crust) !important;
 }
 
 .Select-value-label {
-    color: #cdd6f4 !important;
+    color: var(--text) !important;
+}
+
+button,
+.VirtualizedSelectFocusedOption {
+    background-color: var(--accent) !important;
+    color: var(--crust) !important;
 }
