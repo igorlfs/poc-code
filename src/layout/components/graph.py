@@ -34,7 +34,7 @@ def plot_graph_and_subgroups(
                 dcc.Graph(
                     id="subgroups-plot",
                     figure=figure,
-                    className="w-[1400px] h-[700px]",
+                    className="w-[80%] aspect-[2]",
                 ),
             ],
         )
