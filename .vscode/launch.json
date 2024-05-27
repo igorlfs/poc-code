@@ -12,7 +12,9 @@
                 "--data",
                 "./data/iris.csv",
                 "--errors",
-                "./data/errors.csv"
+                "./data/errors/iris.csv",
+                "--class",
+                "setosa"
             ]
         }
     ]
