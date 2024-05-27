@@ -8,7 +8,6 @@ from src.grouping.discovery import subgroup_discovery
 from src.layout.layout import create_layout
 
 
-
 def get_dfs(dataset_path: str, errors_path: str) -> None | tuple[DataFrame, DataFrame]:
     try:
         dataset_df = pd.read_csv(dataset_path)

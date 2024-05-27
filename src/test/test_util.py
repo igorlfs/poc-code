@@ -1,3 +1,4 @@
+import pytest
 from pandas import DataFrame
 from pysubgroup import Conjunction, EqualitySelector, IntervalSelector
 
@@ -10,9 +11,12 @@ A_LOWER_BOUND = 2
 A_UPPER_BOUND = 3
 
 
-def test_extract_bounded_subgroups() -> None:
-    df = DataFrame()  # noqa: PD901
+@pytest.fixture
+def df() -> DataFrame:
+    return DataFrame()
 
+
+def test_extract_bounded_subgroups(df: DataFrame) -> None:
     selectors: list[IntervalSelector] = [
         IntervalSelector("b", B_LOWER_BOUND, B_UPPER_BOUND),
         IntervalSelector("a", A_LOWER_BOUND, A_UPPER_BOUND),
@@ -29,9 +33,7 @@ def test_extract_bounded_subgroups() -> None:
     assert rule2.upper == A_UPPER_BOUND
 
 
-def test_extract_equality_selection() -> None:
-    df = DataFrame()  # noqa: PD901
-
+def test_extract_equality_selection(df: DataFrame) -> None:
     selectors: list = [
         EqualitySelector("b", B_LOWER_BOUND),
         IntervalSelector("a", A_LOWER_BOUND, A_UPPER_BOUND),
