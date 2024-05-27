@@ -8,23 +8,30 @@ from src.grouping.discovery import subgroup_discovery
 from src.layout.layout import create_layout
 
 
-def run() -> None:
-    dataset_file_path, errors_file_path, target_column, current_class = get_args()
-    dataset_df: DataFrame
-    errors_df: DataFrame
 
+def get_dfs(dataset_path: str, errors_path: str) -> None | tuple[DataFrame, DataFrame]:
     try:
-        dataset_df = pd.read_csv(dataset_file_path)
-        errors_df = pd.read_csv(errors_file_path)
+        dataset_df = pd.read_csv(dataset_path)
+        errors_df = pd.read_csv(errors_path)
     except FileNotFoundError as e:
         print(f"File '{e}' not found")
-        return
+        return None
     except pd.errors.ParserError:
         print("Error parsing input files. Make sure they are CSVs")
-        return
+        return None
     except Exception as e:
         print(f"Unexpected error: {e}")
+        return None
+
+    return (dataset_df, errors_df)
+
+
+def run() -> None:
+    dataset_file_path, errors_file_path, target_column, current_class = get_args()
+    dfs = get_dfs(dataset_file_path, errors_file_path)
+    if dfs is None:
         return
+    dataset_df, errors_df = dfs
 
     if target_column not in dataset_df.columns:
         print(f"Missing target column '{target_column}' in dataset")
