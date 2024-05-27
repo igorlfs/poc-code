@@ -29,11 +29,12 @@ def extract_subgroup_limits(
             if rule1.upper_bound == float("inf")
             else rule1.upper_bound
         )
-        first = Interval(lower, upper)
     elif isinstance(rule1, ps.EqualitySelector):
         lower = upper = rule1.attribute_value
     else:
         raise NotImplementedError(message_for_not_implemented_exception)
+
+    first = Interval(lower, upper)
 
     if len(subgroup.selectors) < 2:  # noqa: PLR2004
         rule2_attribute = y_column if rule1.attribute_name == x_column else x_column
