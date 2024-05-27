@@ -30,6 +30,8 @@ def extract_subgroup_limits(
             else rule1.upper_bound
         )
         first = Interval(lower, upper)
+    elif isinstance(rule1, ps.EqualitySelector):
+        lower = upper = rule1.attribute_value
     else:
         raise NotImplementedError(message_for_not_implemented_exception)
 
@@ -50,6 +52,8 @@ def extract_subgroup_limits(
                 if rule2.upper_bound == float("inf")
                 else rule2.upper_bound
             )
+        elif isinstance(rule2, ps.EqualitySelector):
+            lower = upper = rule2.attribute_value
         else:
             raise NotImplementedError(message_for_not_implemented_exception)
 
