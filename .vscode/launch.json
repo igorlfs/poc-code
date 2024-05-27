@@ -6,6 +6,9 @@
             "type": "python",
             "request": "launch",
             "console": "integratedTerminal",
+            "pythonPath": "${workspaceFolder}/.venv/bin/python",
+            // See https://community.plotly.com/t/debug-reloader-and-the-debugger-in-vs-code-systemexit-3/58444/4
+            "flask": true,
             "module": "src",
             "cwd": "${workspaceFolder}",
             "args": [
