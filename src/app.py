@@ -49,6 +49,10 @@ def run() -> None:
         subgroups_df[subgroups_df["subgroup"].apply(lambda x: len(x.selectors) > 1)]
     )
 
+    if subgroups_df.empty:
+        print("No subgroups have been found")
+        return
+
     # adding string column with rules
     subgroups_df["subgroup_str"] = subgroups_df.subgroup.astype(str)
 

@@ -23,7 +23,9 @@ def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figur
     for each_class, subgroup_set in map_class_to_subgroup_set.items():
         if each_class != current_class:
             rules_of_interest = rules_of_interest.union(subgroup_set)
-    rules_of_interest = rules_of_interest - map_class_to_subgroup_set[current_class]
+
+    if current_class in map_class_to_subgroup_set:
+        rules_of_interest = rules_of_interest - map_class_to_subgroup_set[current_class]
 
     df_of_interest = DataFrame(
         df_rules.query("subgroup in @rules_of_interest")[["subgroup", "covered"]]
