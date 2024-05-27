@@ -7,7 +7,6 @@ from src.colors import BACKGROUND, CRUST, GREEN, RED, WHITE
 from src.layout.components.subgroups.util import extract_subgroup_limits
 
 RECTANGLE_LINE_WIDTH = 2.5
-DELTA = 0.02
 
 
 def plot_graph_and_subgroups(
@@ -115,15 +114,15 @@ def render_subgroups(
         color = RED if mean_subgroup > mean_dataset else GREEN
 
         if attribute == x_column:
-            x_init = rule1.lower - DELTA
-            y_init = rule2.lower - DELTA
-            width = rule1.upper - rule1.lower + 2 * DELTA
-            height = rule2.upper - rule2.lower + 2 * DELTA
+            x_init = rule1.lower
+            y_init = rule2.lower
+            width = rule1.upper - rule1.lower
+            height = rule2.upper - rule2.lower
         else:
-            x_init = rule2.lower - DELTA
-            y_init = rule1.lower - DELTA
-            width = rule2.upper - rule2.lower + 2 * DELTA
-            height = rule1.upper - rule1.lower + 2 * DELTA
+            x_init = rule2.lower
+            y_init = rule1.lower
+            width = rule2.upper - rule2.lower
+            height = rule1.upper - rule1.lower
 
         fig.add_shape(
             type="rect",
