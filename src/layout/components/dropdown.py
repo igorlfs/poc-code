@@ -1,5 +1,7 @@
-from dash import Dash, Input, Output, State, dcc, html
+from dash import Dash, Input, Output, State
 from dash.dash import PreventUpdate
+from dash.dcc.Dropdown import Dropdown
+from dash.html import Button, Div
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
@@ -11,7 +13,7 @@ def subgroups_dropdown(
     dataset_with_errors_df: DataFrame,
     subgroups_df: DataFrame,
     target_column: str,
-) -> html.Div:
+) -> Div:
     all_subgroups: list[str] = subgroups_df.subgroup_str.tolist()
 
     @app.callback(
@@ -21,7 +23,7 @@ def subgroups_dropdown(
     )
     def click_plot_subgroups(
         n_clicks: int, selected_subgroups: list[str]
-    ) -> html.Div | Figure | None:
+    ) -> Div | Figure | None:
         # prevents first update, i.e., should only update on the click of the button
         if n_clicks is None:
             raise PreventUpdate
@@ -87,13 +89,13 @@ def subgroups_dropdown(
             )
         ].subgroup_str.tolist()
 
-    return html.Div(
+    return Div(
         className="mt-12 flex items-center place-content-center",
         children=[
-            html.Div(
+            Div(
                 className="w-[70%]",
                 children=[
-                    dcc.Dropdown(
+                    Dropdown(
                         id="subgroups-dropdown",
                         options=[
                             {
@@ -108,9 +110,9 @@ def subgroups_dropdown(
                     ),
                 ],
             ),
-            html.Div(
+            Div(
                 children=[
-                    html.Button(
+                    Button(
                         className="mx-3 text-center uppercase text-[20pt] font-medium p-2 rounded-lg cursor-pointer",
                         children=["Plot"],
                         id="plot-subgroups-button",

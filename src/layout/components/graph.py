@@ -1,4 +1,5 @@
-from dash import dcc, html
+from dash.dcc import Graph
+from dash.html import Div
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
@@ -6,8 +7,6 @@ from src.colors import BACKGROUND, CRUST, GREEN, RED, WHITE
 from src.layout.components.subgroups.util import extract_subgroup_limits
 
 RECTANGLE_LINE_WIDTH = 2.5
-
-# Rectangle displacement, estimated from someone eles's head
 DELTA = 0.02
 
 
@@ -17,7 +16,7 @@ def plot_graph_and_subgroups(
     y_column: str,
     subgroups: DataFrame | None,
     target_column: str = "target",
-) -> Figure | html.Div:
+) -> Figure | Div:
     figure = render_graph_and_subgroups(
         dataset_with_errors_df,
         x_column,
@@ -28,10 +27,10 @@ def plot_graph_and_subgroups(
 
     # First plot should create html.Div with no plot
     if subgroups is None:
-        return html.Div(
+        return Div(
             className="flex justify-center mt-10 mb-20",
             children=[
-                dcc.Graph(
+                Graph(
                     id="subgroups-plot",
                     figure=figure,
                     className="w-[80%] aspect-[2]",

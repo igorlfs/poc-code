@@ -1,4 +1,6 @@
-from dash import Dash, dcc, html
+from dash import Dash
+from dash.dcc import Graph
+from dash.html import Div
 from pandas import DataFrame
 
 from src.layout.components.dendogram import generate_dendrogram_figure
@@ -14,7 +16,7 @@ def create_layout(
     subgroups_df: DataFrame,
     current_class: str,
     target_column: str,
-) -> html.Div:
+) -> Div:
     table_subgroups_df = DataFrame(
         subgroups_df.query(f"`class` == '{current_class}'")[
             ["subgroup_str", "size_sg", "mean_sg", "quality"]
@@ -31,22 +33,22 @@ def create_layout(
     x_column = features[0]
     y_column = features[1]
 
-    return html.Div(
+    return Div(
         className="flex-col mt-12",
         children=[
-            html.Div(
+            Div(
                 children=[
-                    html.Div(
+                    Div(
                         className="flex xl:flex-row xl:place-content-evenly flex-col",
                         children=[
-                            html.Div(
+                            Div(
                                 className="flex justify-center items-center",
                                 children=[data_table(table_subgroups_df)],
                             ),
-                            html.Div(
+                            Div(
                                 className="flex justify-center mt-10 xl:mt-0",
                                 children=[
-                                    dcc.Graph(
+                                    Graph(
                                         figure=generate_dendrogram_figure(
                                             subgroups_df, current_class
                                         ),
