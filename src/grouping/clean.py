@@ -1,39 +1,38 @@
+from collections import defaultdict
+
 import pandas as pd
 from pandas import DataFrame
-from tqdm import tqdm
 
 
 # Reducing the redundancy in the subgroups mined, by unifying the names of equal coverage subgroup descriptions
 def remove_redundant_subgroups(df_list: list[DataFrame]) -> DataFrame:
     df_rules = pd.concat(df_list, ignore_index=True)
-    list_of_rules: list[dict] = []
 
-    # First, we create a list of the subgroup descriptions and its coverage sets
-    for _, rule_row in tqdm(df_rules.iterrows()):
-        percent_equals = 0
+    # Use defaultdict to store coverage sets by subgroup
+    subgroup_coverages = defaultdict(set)
 
-        row_subgroup = rule_row["subgroup"]
-        row_covered = rule_row["covered"]
+    # Iterate through DataFrame rows and update coverage sets
+    for _, row in df_rules.iterrows():
+        subgroup = row["subgroup"]
+        covered = set(row["covered"])
 
-        for rule in list_of_rules:
-            percent_equals = sum(row_covered & rule["covered"]) / sum(
-                row_covered | rule["covered"]
-            )
-            if percent_equals == 1:
-                rule["subgroup"].add(row_subgroup)
+        # Check if subgroup already exists
+        for existing_subgroup, coverage in subgroup_coverages.items():
+            if (covered & coverage) == coverage:
+                subgroup_coverages[existing_subgroup].add(subgroup)
                 break
-        if percent_equals != 1:
-            list_of_rules.append({"subgroup": {row_subgroup}, "covered": row_covered})
+        else:
+            subgroup_coverages[subgroup].add(subgroup)
 
-    # Then, we create a dictionary to replace all descriptions by the first of them
-    duplicate_rules = [x["subgroup"] for x in list_of_rules if len(x["subgroup"]) > 1]
-    rule_map = {}
-    for duplicate in duplicate_rules:
-        first_rule = None
-        for rule in duplicate:
-            if first_rule is None:
-                first_rule = rule
-            else:
-                rule_map[rule] = first_rule
+    # Create a map of duplicates to the first subgroup
+    subgroup_map = {
+        duplicate: original
+        for original, duplicates in subgroup_coverages.items()
+        for duplicate in duplicates
+        if len(duplicates) > 1
+    }
 
-    return df_rules.replace({"subgroup": rule_map})
+    # Replace duplicate subgroups with their originals
+    df_rules["subgroup"] = df_rules["subgroup"].replace(subgroup_map)
+
+    return df_rules
