@@ -92,7 +92,7 @@ def render_graph_and_subgroups(
     if subgroups is None:
         return fig
 
-    render_subgroups(subgroups, dataset_with_errors_df, x_column, y_column, fig)
+    render_subgroups(subgroups, dataset_with_errors_df, x_column, fig)
 
     return fig
 
@@ -101,15 +101,12 @@ def render_subgroups(
     subgroups: DataFrame,
     dataset_df: DataFrame,
     x_column: str,
-    y_column: str,
     fig: Figure,
 ) -> None:
     for subgroups_tuple in subgroups.itertuples(index=False):
         subgroup, mean_subgroup, mean_dataset = subgroups_tuple
 
-        rule1, rule2, attribute = extract_subgroup_limits(
-            subgroup, dataset_df, x_column, y_column
-        )
+        rule1, rule2, attribute = extract_subgroup_limits(subgroup, dataset_df)
 
         color = RED if mean_subgroup > mean_dataset else GREEN
 
