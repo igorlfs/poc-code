@@ -4,6 +4,7 @@ from dash.dcc.Dropdown import Dropdown
 from dash.html import Button, Div
 from pandas import DataFrame
 from plotly.graph_objs import Figure
+from pysubgroup import ps
 
 from src.layout.components.graph import plot_graph_and_subgroups
 
@@ -14,7 +15,8 @@ def subgroups_dropdown(
     subgroups_df: DataFrame,
     target_column: str,
 ) -> Div:
-    all_subgroups: list[str] = subgroups_df.subgroup_str.tolist()
+    all_subgroups: list[ps.Conjunction] = subgroups_df.subgroup.tolist()
+    all_subgroups_str: list[str] = subgroups_df.subgroup_str.tolist()
 
     @app.callback(
         Output("subgroups-plot", "figure"),
@@ -55,39 +57,36 @@ def subgroups_dropdown(
             target_column,
         )
 
+    def _filter(subgroup: ps.Conjunction, x_column: str, y_column: str) -> bool:
+        x: str = subgroup.selectors[0].attribute_name
+        y: str = subgroup.selectors[1].attribute_name
+        return (x == x_column and y == y_column) ^ (y == x_column and x == y_column)
+
     @app.callback(
         Output("subgroups-dropdown", "options"),
         Input("subgroups-dropdown", "value"),
     )
     def filter_subgroups(selected_subgroups: list[str]) -> list[str]:
         if len(selected_subgroups) == 0:
-            return all_subgroups
+            return all_subgroups_str
 
         if len(selected_subgroups) > 1:
             raise PreventUpdate
 
-        # get first cause it is the only one
-        first_subgroup = subgroups_df[
-            subgroups_df["subgroup_str"] == selected_subgroups[0]
-        ]
+        # get first subgroup cause it is the only one
+        first_subgroup = subgroups_df.query(
+            f"subgroup_str == '{selected_subgroups[0]}'"
+        )[["x_column", "y_column"]]
 
-        # case where only one dimension defines rule
-        if first_subgroup.y_column.iloc[0] == "":
-            return subgroups_df[
-                (subgroups_df.x_column == first_subgroup.x_column.iloc[0])
-                ^ (subgroups_df.y_column == first_subgroup.x_column.iloc[0])
-            ].subgroup_str.tolist()
+        # get first line cause it's the only one
+        columns = first_subgroup.iloc[0].to_dict()
 
-        return subgroups_df[
-            (
-                (subgroups_df.x_column == first_subgroup.x_column.iloc[0])
-                & (subgroups_df.y_column == first_subgroup.y_column.iloc[0])
-            )
-            ^ (
-                (subgroups_df.x_column == first_subgroup.y_column.iloc[0])
-                & (subgroups_df.y_column == first_subgroup.x_column.iloc[0])
-            )
-        ].subgroup_str.tolist()
+        subgroups_filtered = filter(
+            lambda sg: _filter(sg, columns["x_column"], columns["y_column"]),
+            all_subgroups,
+        )
+
+        return [str(x) for x in list(subgroups_filtered)]
 
     return Div(
         className="mt-12 flex items-center place-content-center",
@@ -102,7 +101,7 @@ def subgroups_dropdown(
                                 "label": rule,
                                 "value": rule,
                             }
-                            for rule in all_subgroups
+                            for rule in all_subgroups_str
                         ],
                         value=[],
                         multi=True,
