@@ -4,7 +4,7 @@ from dash.dcc.Dropdown import Dropdown
 from dash.html import Button, Div
 from pandas import DataFrame
 from plotly.graph_objs import Figure
-from pysubgroup import ps
+from pysubgroup import Conjunction
 
 from src.layout.components.graph import plot_graph_and_subgroups
 
@@ -15,7 +15,7 @@ def subgroups_dropdown(
     subgroups_df: DataFrame,
     target_column: str,
 ) -> Div:
-    all_subgroups: list[ps.Conjunction] = subgroups_df.subgroup.tolist()
+    all_subgroups: list[Conjunction] = subgroups_df.subgroup.tolist()
     all_subgroups_str: list[str] = subgroups_df.subgroup_str.tolist()
 
     @app.callback(
@@ -34,30 +34,27 @@ def subgroups_dropdown(
         if len(selected_subgroups) == 0:
             raise PreventUpdate
 
-        df_rows: list[int] = []
-        df_rows = [
-            subgroups_df.index[subgroups_df.subgroup_str == subgroup].tolist()[0]
-            for subgroup in selected_subgroups
-        ]
+        selected_subgroup_rows = subgroups_df.query(
+            "subgroup_str in @selected_subgroups"
+        ).index.tolist()
 
-        # we assume the selected subgroup is of size 2, and we arbitrarily use the first one as x_axis and second one as y_axis of 2d plot
+        first_subgroup = subgroups_df.query(
+            f"subgroup_str == '{selected_subgroups[0]}'"
+        )[["x_column", "y_column"]]
 
-        first_subgroup = subgroups_df[
-            subgroups_df["subgroup_str"] == selected_subgroups[0]
-        ]
-
-        x_column = first_subgroup.x_column.iloc[0]
-        y_column = first_subgroup.y_column.iloc[0]
+        columns = first_subgroup.iloc[0].to_dict()
 
         return plot_graph_and_subgroups(
             dataset_with_errors_df,
-            x_column,
-            y_column,
-            subgroups_df.loc[df_rows, ["subgroup", "mean_sg", "mean_dataset"]],
+            columns["x_column"],
+            columns["y_column"],
+            subgroups_df.loc[
+                selected_subgroup_rows, ["subgroup", "mean_sg", "mean_dataset"]
+            ],
             target_column,
         )
 
-    def _filter(subgroup: ps.Conjunction, x_column: str, y_column: str) -> bool:
+    def _filter(subgroup: Conjunction, x_column: str, y_column: str) -> bool:
         x: str = subgroup.selectors[0].attribute_name
         y: str = subgroup.selectors[1].attribute_name
         return (x == x_column and y == y_column) ^ (y == x_column and x == y_column)

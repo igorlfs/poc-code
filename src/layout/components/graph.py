@@ -21,7 +21,7 @@ def plot_graph_and_subgroups(
         x_column,
         y_column,
         target_column,
-        subgroups=subgroups,
+        subgroups,
     )
 
     # First plot should create html.Div with no plot
