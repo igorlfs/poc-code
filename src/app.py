@@ -61,16 +61,14 @@ def run() -> None:
         return
 
     # adding string column with rules
-    subgroups_df["subgroup_str"] = subgroups_df.subgroup.astype(str)
-
-    # adding two extra columns for each coordinate of each rule. If rule contain only one coordinate, second column will be null
-    subgroups_df["x_column"] = ""
-    subgroups_df["y_column"] = ""
-
-    for idx, subgroup in enumerate(subgroups_df.subgroup):
-        rules = subgroup.selectors
-        subgroups_df["x_column"].at[idx] = rules[0].attribute_name
-        subgroups_df["y_column"].at[idx] = rules[1].attribute_name
+    subgroups_df["subgroup_str"] = subgroups_df["subgroup"].astype(str)
+    # adding columns for axis of each rule
+    subgroups_df["x_column"] = subgroups_df["subgroup"].apply(
+        lambda x: x.selectors[0].attribute_name
+    )
+    subgroups_df["y_column"] = subgroups_df["subgroup"].apply(
+        lambda x: x.selectors[1].attribute_name
+    )
 
     app = Dash(
         __name__,
