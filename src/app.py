@@ -54,6 +54,7 @@ def run() -> None:
     subgroups_df = DataFrame(
         subgroups_df[subgroups_df["subgroup"].apply(lambda x: len(x.selectors) > 1)]
     )
+    subgroups_df = subgroups_df.reset_index(drop=True)
 
     if subgroups_df.empty:
         print("No subgroups have been found")
