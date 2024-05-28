@@ -10,7 +10,7 @@ def subgroup_discovery(
 ) -> list[DataFrame]:
     dataset_clone_df = dataset_df.drop(target_column, axis=1)
 
-    df_rules_list: list[DataFrame] = []
+    df_rules_list = []
 
     data = pd.concat([dataset_clone_df, errors_df], axis=1)
     for column in errors_df.columns:
@@ -29,6 +29,6 @@ def subgroup_discovery(
         df_rules["covered"] = df_rules["subgroup"].apply(lambda x: x.covers(data))
         df_rules["class"] = column
 
-        df_rules_list.append(df_rules.copy())
+        df_rules_list.append(df_rules)
 
     return df_rules_list
