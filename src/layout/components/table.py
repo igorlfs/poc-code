@@ -4,7 +4,20 @@ from pandas import DataFrame
 from src.colors import BACKGROUND, CRUST, MANTLE, WHITE
 
 
-def data_table(table_subgroups_df: DataFrame) -> DataTable:
+def data_table(subgroups_df: DataFrame, current_class: str) -> DataTable:
+    table_subgroups_df = DataFrame(
+        subgroups_df.query(f"`class` == '{current_class}'")[
+            ["subgroup_str", "size_sg", "mean_sg", "quality"]
+        ]
+    ).rename(
+        columns={
+            "subgroup_str": "Subgrupo",
+            "size_sg": "Tamanho",
+            "mean_sg": "Erro médio",
+            "quality": "Qualidade",
+        }
+    )
+
     return DataTable(
         id="rules_table",
         sort_action="native",

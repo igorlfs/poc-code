@@ -17,22 +17,6 @@ def create_layout(
     current_class: str,
     target_column: str,
 ) -> Div:
-    table_subgroups_df = DataFrame(
-        subgroups_df.query(f"`class` == '{current_class}'")[
-            ["subgroup_str", "size_sg", "mean_sg", "quality"]
-        ]
-    ).rename(
-        columns={
-            "subgroup_str": "Subgrupo",
-            "size_sg": "Tamanho",
-            "mean_sg": "Erro médio",
-            "quality": "Qualidade",
-        }
-    )
-
-    x_column = features[0]
-    y_column = features[1]
-
     return Div(
         className="flex-col mt-12",
         children=[
@@ -43,7 +27,7 @@ def create_layout(
                         children=[
                             Div(
                                 className="flex justify-center items-center",
-                                children=[data_table(table_subgroups_df)],
+                                children=[data_table(subgroups_df, current_class)],
                             ),
                             Div(
                                 className="flex justify-center mt-10 xl:mt-0",
@@ -65,8 +49,8 @@ def create_layout(
                     ),
                     plot_graph_and_subgroups(
                         dataset_with_errors_df,
-                        x_column,
-                        y_column,
+                        features[0],
+                        features[1],
                         None,
                         target_column,
                     ),
