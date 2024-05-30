@@ -48,7 +48,7 @@ def render_graph_and_subgroups(
     target_column: str,
     subgroups: DataFrame | None,
 ) -> Figure:
-    colors: list[list[str]] = [
+    colors_list = [
         ["#89b4fa", "#1e66f5"],
         ["#f9e2af", "#df8e1d"],
         ["#cba6f7", "#8839ef"],
@@ -64,7 +64,7 @@ def render_graph_and_subgroups(
     ):
         class_df = dataset_with_errors_df.query(f"{target_column} == '{class_name}'")
         errors = class_df[class_name].tolist()
-        color = colors[class_index % len(colors)]
+        colors = colors_list[class_index % len(colors_list)]
         fig.add_scatter(
             x=class_df[x_column],
             y=class_df[y_column],
@@ -72,9 +72,9 @@ def render_graph_and_subgroups(
             text=errors,
             mode="markers",
             marker={
-                "size": 16,
+                "size": 10,
                 "color": errors,
-                "colorscale": color,
+                "colorscale": colors,
             },
         )
 
