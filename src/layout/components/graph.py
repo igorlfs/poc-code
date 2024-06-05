@@ -3,7 +3,7 @@ from dash.html import Div
 from pandas import DataFrame
 from plotly.graph_objs import Figure
 
-from src.colors import BACKGROUND, CRUST, GREEN, RED, WHITE
+from src.colors import BACKGROUND, CRUST, GREEN, MANTLE, RED, WHITE
 from src.layout.components.subgroups.util import extract_subgroup_limits
 
 RECTANGLE_LINE_WIDTH = 2.5
@@ -78,8 +78,12 @@ def render_graph_and_subgroups(
             },
         )
 
-    fig.update_xaxes(title=x_column)
-    fig.update_yaxes(title=y_column)
+    fig.update_xaxes(
+        title=x_column, gridcolor=MANTLE, zerolinecolor=MANTLE, zerolinewidth=3
+    )
+    fig.update_yaxes(
+        title=y_column, gridcolor=MANTLE, zerolinecolor=MANTLE, zerolinewidth=3
+    )
 
     fig.update_layout(
         font_color=WHITE,

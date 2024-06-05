@@ -31,7 +31,7 @@ def create_layout(
                                 children=[data_table(subgroups_df, current_class)],
                             ),
                             Div(
-                                className="flex flex-col justify-center items-center mt-10 xl:mt-0",
+                                className="flex flex-col items-center mt-10 xl:mt-0",
                                 children=[
                                     Graph(
                                         id="dendrogram-graph",

@@ -48,12 +48,12 @@ h3 {
 
 .rc-slider-mark-text {
     background-color: transparent !important;
-    color: var(--subtext);
+    color: var(--subtext) !important;
 }
 
 .rc-slider-mark-text-active {
-    color: var(--text);
-    font-weight: bold;
+    color: var(--text) !important;
+    font-weight: bold !important;
 }
 
 .Select-menu-outer {
