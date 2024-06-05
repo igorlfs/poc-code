@@ -40,6 +40,8 @@ def data_table(subgroups_df: DataFrame, current_class: str) -> DataTable:
             "border": "none",
         },
         style_data={
+            "paddingLeft": "10px",
+            "paddingRight": "10px",
             "height": "auto",
             "whiteSpace": "normal",
             "color": WHITE,
@@ -54,6 +56,7 @@ def data_table(subgroups_df: DataFrame, current_class: str) -> DataTable:
         style_data_conditional=[
             {"if": {"row_index": "odd"}, "backgroundColor": CRUST},
             {"if": {"row_index": "even"}, "backgroundColor": MANTLE},
+            {"if": {"column_id": "Qualidade"}, "textAlign": "right"},
             {"if": {"column_id": "Tamanho"}, "textAlign": "right"},
             {"if": {"column_id": "Subgrupo"}, "textAlign": "left"},
         ],
