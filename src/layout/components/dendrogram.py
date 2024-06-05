@@ -7,10 +7,12 @@ from plotly.graph_objs import Figure
 from scipy.spatial import distance
 from sklearn.cluster import AgglomerativeClustering
 
-from src.colors import BASE, WHITE
+from src.colors import BASE, CRUST, WHITE
 
 
-def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figure:
+def generate_dendrogram_figure(
+    df_rules: DataFrame, current_class: str, pos_x: float | None = None
+) -> Figure:
     map_class_to_subgroup_set: dict[str, set] = {}
 
     for each_class in df_rules["class"].unique():
@@ -27,9 +29,15 @@ def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figur
     if current_class in map_class_to_subgroup_set:
         rules_of_interest = rules_of_interest - map_class_to_subgroup_set[current_class]
 
-    df_of_interest = DataFrame(
-        df_rules.query("subgroup in @rules_of_interest")[["subgroup", "covered"]]
-    ).drop_duplicates(subset="subgroup")
+    df_of_interest = (
+        DataFrame(
+            df_rules.query("subgroup in @rules_of_interest")[
+                ["subgroup", "covered", "quality"]
+            ]
+        )
+        .drop_duplicates(subset="subgroup")
+        .reset_index(drop=True)
+    )
 
     # create linkage matrix and then plot the dendrogram
     jaccard_generator = (
@@ -47,10 +55,6 @@ def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figur
 
     # since flattened_matrix is the flattened upper triangle of the matrix we need to expand it.
     normal_matrix = distance.squareform(flattened_matrix)
-
-    # TODO why is this commented out?
-    # replacing zeros with ones at the diagonal.
-    # normal_matrix += np.identity(len(df_interesse['covered']))
 
     # setting distance_threshold=0 ensures we compute the full tree.
     ac = AgglomerativeClustering(
@@ -75,14 +79,10 @@ def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figur
 
     linkage_matrix = np.column_stack([ac.children_, ac.distances_, counts])
 
-    # create_dendrogram expects strings
-    df_of_interest["subgroup"] = df_of_interest["subgroup"].astype(str)
-
-    # TODO "VER COM DANIEL QUESTÃO DA LINKAGE MATRIX"
     fig = ff.create_dendrogram(
         X=normal_matrix,
-        orientation="right",
-        labels=df_of_interest.subgroup.tolist(),
+        orientation="left",
+        labels=df_of_interest["subgroup"].astype(str).tolist(),
         colorscale=[
             "#89b4fa",
             "#89dceb",
@@ -96,15 +96,17 @@ def generate_dendrogram_figure(df_rules: DataFrame, current_class: str) -> Figur
         linkagefun=lambda _: linkage_matrix,
     )
 
+    if pos_x is not None:
+        fig.add_vline(x=pos_x, line_width=4, line_color=CRUST)
+
     fig.update_layout(
         width=800,
         height=600,
-        yaxis={"side": "right"},
         plot_bgcolor=BASE,
         paper_bgcolor="rgba(0,0,0,0)",
         font_color=WHITE,
         margin={"l": 0, "r": 0, "t": 0, "b": 0},
     )
-    fig.update_xaxes(range=[-1, -0.45], showticklabels=False)
+    fig.update_xaxes(range=[0, 1], showticklabels=True)
 
     return fig

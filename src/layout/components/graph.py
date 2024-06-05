@@ -16,7 +16,7 @@ def plot_graph_and_subgroups(
     subgroups: DataFrame | None,
     target_column: str = "target",
 ) -> Figure | Div:
-    figure = render_graph_and_subgroups(
+    fig = render_graph_and_subgroups(
         dataset_with_errors_df,
         x_column,
         y_column,
@@ -31,14 +31,14 @@ def plot_graph_and_subgroups(
             children=[
                 Graph(
                     id="subgroups-plot",
-                    figure=figure,
+                    figure=fig,
                     className="w-[80%] aspect-[2]",
                 ),
             ],
         )
 
     # Every subsequent render call should just return the figure to update the plot
-    return figure
+    return fig
 
 
 def render_graph_and_subgroups(

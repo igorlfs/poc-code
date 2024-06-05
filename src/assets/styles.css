@@ -15,6 +15,11 @@ body {
     background-color: var(--base);
 }
 
+h3 {
+    font-size: 20pt !important;
+    font-weight: 700 !important;
+}
+
 .Select-control {
     background-color: var(--crust) !important;
     border: none !important;
@@ -30,6 +35,25 @@ body {
 
 .Select-input {
     color: var(--text) !important;
+}
+
+.rc-slider * {
+    background-color: var(--accent) !important;
+    border: none !important;
+}
+
+.rc-slider-handle {
+    background-color: var(--important) !important;
+}
+
+.rc-slider-mark-text {
+    background-color: transparent !important;
+    color: var(--subtext);
+}
+
+.rc-slider-mark-text-active {
+    color: var(--text);
+    font-weight: bold;
 }
 
 .Select-menu-outer {

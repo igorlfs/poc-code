@@ -86,7 +86,7 @@ def subgroups_dropdown(
         return [str(x) for x in list(subgroups_filtered)]
 
     return Div(
-        className="mt-12 flex items-center place-content-center",
+        className="mt-6 flex items-center place-content-center",
         children=[
             Div(
                 className="w-[70%]",
@@ -109,7 +109,7 @@ def subgroups_dropdown(
             Div(
                 children=[
                     Button(
-                        className="mx-3 text-center uppercase text-[20pt] font-medium p-2 rounded-lg cursor-pointer",
+                        className="mx-3 text-center text-[20pt] font-bold p-2 rounded-lg cursor-pointer",
                         children=["Plot"],
                         id="plot-subgroups-button",
                     ),
