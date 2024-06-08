@@ -11,10 +11,10 @@ def data_table(subgroups_df: DataFrame, current_class: str) -> DataTable:
         ]
     ).rename(
         columns={
-            "subgroup_str": "Subgrupo",
-            "size_sg": "Tamanho",
-            "mean_sg": "Erro médio",
-            "quality": "Qualidade",
+            "subgroup_str": "Subgroup",
+            "size_sg": "Size",
+            "mean_sg": "Avg Error",
+            "quality": "Quality",
         }
     )
 
@@ -27,9 +27,7 @@ def data_table(subgroups_df: DataFrame, current_class: str) -> DataTable:
                 "name": c,
                 "id": c,
                 "type": "numeric",
-                "format": {
-                    "specifier": ".3f" if c in ("Qualidade", "Erro médio") else ""
-                },
+                "format": {"specifier": ".3f" if c in ("Quality", "Avg Error") else ""},
             }
             for c in table_subgroups_df.columns
         ],

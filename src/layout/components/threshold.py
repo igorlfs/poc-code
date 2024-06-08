@@ -99,7 +99,7 @@ def threshold(
         className="flex justify-center items-center mt-8",
         children=[
             html.H3(
-                "Limiar",
+                "Threshold",
                 className=f"font-medium rounded-lg text-[{WHITE}]",
             ),
             dcc.Slider(

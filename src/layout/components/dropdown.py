@@ -1,6 +1,6 @@
 from dash import Dash, Input, Output, State
 from dash.dash import PreventUpdate
-from dash.dcc.Dropdown import Dropdown
+from dash.dcc import Dropdown
 from dash.html import Button, Div
 from pandas import DataFrame
 from plotly.graph_objs import Figure

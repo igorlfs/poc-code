@@ -86,4 +86,4 @@ def run() -> None:
         target_column,
     )
 
-    app.run(debug=True)
+    app.run()
