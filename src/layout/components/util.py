@@ -3,21 +3,31 @@ from itertools import combinations
 import numpy as np
 from numpy.typing import NDArray
 from pandas import DataFrame
+from pysubgroup import Conjunction
 from scipy.spatial import distance
 from sklearn.cluster import AgglomerativeClustering
 
 
-def get_clustering_model(
+def calculate_jaccard_similarity(
+    a: [NDArray, Conjunction], b: [NDArray, Conjunction]
+) -> float:
+    intersection = set(a[1].selectors).intersection(set(b[1].selectors))
+    union = set(a[1].selectors).union(set(b[1].selectors))
+    jaccard_selectors = len(intersection) / len(union)
+
+    jaccard_covered = sum(a[0] & b[0]) / sum(a[0] | b[0])
+
+    max_jaccard = max(jaccard_selectors, jaccard_covered)
+
+    return 1 - max_jaccard
+
+
+def get_clustering(
     df_for_current_class: DataFrame,
 ) -> [AgglomerativeClustering, NDArray]:
     # create linkage matrix and then plot the dendrogram
     jaccard_generator = (
-        1
-        - max(
-            len(set(row1[1].selectors).intersection(set(row2[1].selectors)))
-            / len(set(row1[1].selectors).union(set(row2[1].selectors))),
-            sum(row1[0] & row2[0]) / sum(row1[0] | row2[0]),
-        )
+        calculate_jaccard_similarity(row1, row2)
         for row1, row2 in combinations(
             zip(df_for_current_class["covered"], df_for_current_class["subgroup"]), 2
         )
