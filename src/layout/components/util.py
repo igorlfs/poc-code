@@ -28,12 +28,12 @@ def get_clustering_model(
     normal_matrix = distance.squareform(flattened_matrix)
 
     # setting distance_threshold=0 ensures we compute the full tree.
-    clustering_model = AgglomerativeClustering(
+    clustering = AgglomerativeClustering(
         distance_threshold=0,
         metric="precomputed",
         n_clusters=None,  # pyright: ignore
         linkage="average",
     )
-    clustering_model.fit(normal_matrix)
+    clustering.fit(normal_matrix)
 
-    return clustering_model, normal_matrix
+    return clustering, normal_matrix

@@ -7,7 +7,7 @@ from pysubgroup import Conjunction
 
 from src.colors import WHITE
 from src.layout.components.dendrogram import generate_dendrogram_figure
-from src.layout.components.util import get_clustering_model
+from src.layout.components.util import get_clustering
 
 
 def threshold(
@@ -36,25 +36,25 @@ def threshold(
             return []
 
         current_class_df = subgroups_df.query(f"`class` == '{current_class}'")
-        clustering_model, _ = get_clustering_model(current_class_df)
+        clustering, _ = get_clustering(current_class_df)
 
-        n_samples = len(clustering_model.labels_)
+        n_samples = len(clustering.labels_)
         dict_nodes = {}  # Save the representative subgroup for each merge
         subgroup_replacements = {}  # Save the original and substitute subgroups
 
-        for i, dist in enumerate(clustering_model.distances_):
+        for i, dist in enumerate(clustering.distances_):
             if dist > pos_x:
                 break
 
             j = (
-                dict_nodes[clustering_model.children_[i][0] - n_samples]
-                if clustering_model.children_[i][0] >= n_samples
-                else clustering_model.children_[i][0]
+                dict_nodes[clustering.children_[i][0] - n_samples]
+                if clustering.children_[i][0] >= n_samples
+                else clustering.children_[i][0]
             )
             k = (
-                dict_nodes[clustering_model.children_[i][1] - n_samples]
-                if clustering_model.children_[i][1] >= n_samples
-                else clustering_model.children_[i][1]
+                dict_nodes[clustering.children_[i][1] - n_samples]
+                if clustering.children_[i][1] >= n_samples
+                else clustering.children_[i][1]
             )
 
             if current_class_df.loc[j, "quality"] > current_class_df.loc[k, "quality"]:

@@ -6,13 +6,13 @@ from plotly.graph_objs import Figure
 from sklearn.cluster import AgglomerativeClustering
 
 from src.colors import CRUST, WHITE
-from src.layout.components.util import get_clustering_model
+from src.layout.components.util import get_clustering
 
 
-def get_linkage_matrix(clustering_model: AgglomerativeClustering) -> NDArray:
-    counts = np.zeros(clustering_model.children_.shape[0])
-    n_samples = len(clustering_model.labels_)
-    for i, merge in enumerate(clustering_model.children_):
+def get_linkage_matrix(clustering: AgglomerativeClustering) -> NDArray:
+    counts = np.zeros(clustering.children_.shape[0])
+    n_samples = len(clustering.labels_)
+    for i, merge in enumerate(clustering.children_):
         current_count = 0
         for child_idx in merge:
             if child_idx < n_samples:
@@ -21,9 +21,7 @@ def get_linkage_matrix(clustering_model: AgglomerativeClustering) -> NDArray:
                 current_count += counts[child_idx - n_samples]
         counts[i] = current_count
 
-    return np.column_stack(
-        [clustering_model.children_, clustering_model.distances_, counts]
-    )
+    return np.column_stack([clustering.children_, clustering.distances_, counts])
 
 
 def generate_dendrogram_figure(
@@ -32,8 +30,8 @@ def generate_dendrogram_figure(
     pos_x: float | None = None,
 ) -> Figure:
     current_class_df = subgroups_df.query(f"`class` == '{current_class}'")
-    clustering_model, normal_matrix = get_clustering_model(current_class_df)
-    linkage_matrix = get_linkage_matrix(clustering_model)
+    clustering, normal_matrix = get_clustering(current_class_df)
+    linkage_matrix = get_linkage_matrix(clustering)
 
     fig = ff.create_dendrogram(
         X=normal_matrix,
