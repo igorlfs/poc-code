@@ -1,14 +1,17 @@
 import numpy as np
 import pysubgroup as ps
+from pandas import DataFrame
 
 
 # Define a custom quality function for a bidirectional search over the model's errors
 class BidirectionalQFNumeric(ps.StandardQFNumeric):
     @staticmethod
-    def bidirectional_qf_numeric(a, mean_dataset, instances_subgroup, mean_sg):
+    def bidirectional_qf_numeric(
+        a: float, mean_dataset: float, instances_subgroup: int, mean_sg: float
+    ) -> float:
         return instances_subgroup**a * abs(mean_sg - mean_dataset)
 
-    def __init__(self, a: float):
+    def __init__(self: "BidirectionalQFNumeric", a: float) -> None:
         self.a = a
         self.dataset_statistics = None
         self.all_target_values = None
@@ -19,9 +22,14 @@ class BidirectionalQFNumeric(ps.StandardQFNumeric):
         self.read_centroid = lambda x: x.mean
         self.estimator = ps.StandardQFNumeric.Summation_Estimator(self)
 
-    def evaluate(self, subgroup, target, data, statistics=None):
+    def evaluate(
+        self: "BidirectionalQFNumeric",
+        subgroup: ps.Conjunction,
+        target: ps.NumericTarget,
+        data: DataFrame,
+        statistics=None,  # noqa: ANN001
+    ) -> float:
         statistics = self.ensure_statistics(subgroup, target, data, statistics)
-        assert statistics is not None
         dataset = self.dataset_statistics
         return BidirectionalQFNumeric.bidirectional_qf_numeric(
             self.a,

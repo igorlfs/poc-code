@@ -6,7 +6,6 @@ venv = ".venv"
 typeCheckingMode = "standard"
 
 [tool.ruff]
-exclude = ["./src/grouping/lib.py"]
 [tool.ruff.lint]
 select = [
     "E",
