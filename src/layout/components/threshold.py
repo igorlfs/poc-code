@@ -10,15 +10,30 @@ from src.layout.components.dendrogram import generate_dendrogram_figure
 from src.layout.components.util import get_clustering
 
 
-def threshold(
+def threshold(  # noqa: C901
     app: Dash,
     subgroups_df: DataFrame,
     current_class: str,
 ) -> Div:
     @app.callback(
-        Output("dendrogram-graph", "figure"), Input("slider-position", "value")
+        Output("slider-threshold", "value"),
+        Input("clear-threshold-button", "n_clicks"),
     )
-    def display_graph(pos_x: float) -> Figure:
+    def click_clear_threshold(_: int) -> None:
+        return None
+
+    @app.callback(
+        Output("clear-threshold-button", "style"), Input("slider-threshold", "value")
+    )
+    def show_clear_button(pos_x: float | None):
+        if pos_x is None:
+            return {"display": "none"}
+        return {}
+
+    @app.callback(
+        Output("dendrogram-graph", "figure"), Input("slider-threshold", "value")
+    )
+    def display_graph(pos_x: float | None) -> Figure:
         return generate_dendrogram_figure(subgroups_df, current_class, pos_x)
 
     def _filter(subgroup: Conjunction, x_column: str, y_column: str) -> bool:
@@ -28,7 +43,7 @@ def threshold(
 
     @app.callback(
         Output("subgroups-dropdown", "options"),
-        Input("slider-position", "value"),
+        Input("slider-threshold", "value"),
         Input("subgroups-dropdown", "value"),
     )
     def filter_subgroups(pos_x: float, selected_subgroups: list[str]) -> list[str]:
@@ -103,7 +118,7 @@ def threshold(
                 className=f"font-medium rounded-lg text-[{WHITE}]",
             ),
             dcc.Slider(
-                id="slider-position",
+                id="slider-threshold",
                 className="w-[500px]",
                 min=0,
                 max=1,
@@ -118,6 +133,12 @@ def threshold(
                     0.8: "0.8",
                     1: "1",
                 },
+            ),
+            html.Button(
+                style={"display": "none"},
+                className="mx-3 text-center font-[16pt] font-bold p-2 rounded-lg cursor-pointer uppercase",
+                children=["Clear"],
+                id="clear-threshold-button",
             ),
         ],
     )
