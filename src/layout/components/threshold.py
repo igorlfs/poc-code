@@ -115,7 +115,7 @@ def threshold(  # noqa: C901
         children=[
             html.H3(
                 "Threshold",
-                className=f"font-medium rounded-lg text-[{WHITE}]",
+                className=f"font-medium rounded-lg text-[{WHITE}] uppercase",
             ),
             dcc.Slider(
                 id="slider-threshold",

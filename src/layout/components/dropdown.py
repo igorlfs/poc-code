@@ -66,7 +66,7 @@ def subgroups_dropdown(
             Div(
                 children=[
                     Button(
-                        className="mx-3 text-center text-[20pt] font-bold p-2 rounded-lg cursor-pointer",
+                        className="mx-3 text-center text-[20pt] font-bold p-2 rounded-lg cursor-pointer uppercase",
                         children=["Plot"],
                         id="plot-subgroups-button",
                     ),
