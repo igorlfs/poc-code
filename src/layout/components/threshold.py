@@ -25,7 +25,7 @@ def threshold(  # noqa: C901
     @app.callback(
         Output("clear-threshold-button", "style"), Input("slider-threshold", "value")
     )
-    def show_clear_button(pos_x: float | None):
+    def show_clear_button(pos_x: float | None) -> dict:
         if pos_x is None:
             return {"display": "none"}
         return {}
@@ -41,16 +41,48 @@ def threshold(  # noqa: C901
         y: str = subgroup.selectors[1].attribute_name
         return (x == x_column and y == y_column) ^ (y == x_column and x == y_column)
 
+    def extract_first_subgroup_and_filter(
+        current_class_df: DataFrame,
+        selected_subgroups: list[str],
+        current_groups: set[Conjunction] | list[Conjunction],
+    ) -> list[str]:
+        # get first subgroup cause it is the only one
+        first_subgroup = current_class_df.query(
+            f"subgroup_str == '{selected_subgroups[0]}'"
+        )[["x_column", "y_column"]]
+
+        # get first line cause it's the only one
+        columns = first_subgroup.iloc[0].to_dict()
+
+        subgroups_filtered = filter(
+            lambda sg: _filter(sg, columns["x_column"], columns["y_column"]),
+            current_groups,
+        )
+
+        return [str(x) for x in list(subgroups_filtered)]
+
     @app.callback(
         Output("subgroups-dropdown", "options"),
         Input("slider-threshold", "value"),
         Input("subgroups-dropdown", "value"),
     )
     def filter_subgroups(pos_x: float, selected_subgroups: list[str]) -> list[str]:
-        if pos_x is None:
-            return []
-
         current_class_df = subgroups_df.query(f"`class` == '{current_class}'")
+
+        all_subgroups_class = current_class_df["subgroup"].tolist()
+        all_subgroups_str_class = current_class_df["subgroup_str"].tolist()
+
+        if pos_x is None:
+            if len(selected_subgroups) == 0:
+                return all_subgroups_str_class
+
+            if len(selected_subgroups) > 1:
+                raise PreventUpdate
+
+            return extract_first_subgroup_and_filter(
+                current_class_df, selected_subgroups, all_subgroups_class
+            )
+
         clustering, _ = get_clustering(current_class_df)
 
         n_samples = len(clustering.labels_)
@@ -95,20 +127,9 @@ def threshold(  # noqa: C901
         if len(selected_subgroups) > 1:
             raise PreventUpdate
 
-        # get first subgroup cause it is the only one
-        first_subgroup = current_class_df.query(
-            f"subgroup_str == '{selected_subgroups[0]}'"
-        )[["x_column", "y_column"]]
-
-        # get first line cause it's the only one
-        columns = first_subgroup.iloc[0].to_dict()
-
-        subgroups_filtered_and_match_columns = filter(
-            lambda sg: _filter(sg, columns["x_column"], columns["y_column"]),
-            filtered_subgroups,
+        return extract_first_subgroup_and_filter(
+            current_class_df, selected_subgroups, filtered_subgroups
         )
-
-        return [str(x) for x in list(subgroups_filtered_and_match_columns)]
 
     return Div(
         className="flex justify-center items-center mt-8",
@@ -120,6 +141,7 @@ def threshold(  # noqa: C901
             dcc.Slider(
                 id="slider-threshold",
                 className="w-[500px]",
+                value=None,
                 min=0,
                 max=1,
                 step=0.01,
