@@ -51,9 +51,10 @@ def run() -> None:
     subgroups_df = remove_redundant_subgroups(df_list)
 
     # Remove subgroups with only group, so we don't have to worry about visualization
-    subgroups_df = DataFrame(
-        subgroups_df[subgroups_df["subgroup"].apply(lambda x: len(x.selectors) > 1)]
-    )
+    subgroups_df = subgroups_df[
+        subgroups_df["subgroup"].apply(lambda x: len(x.selectors) > 1)
+    ]
+
     subgroups_df = subgroups_df.reset_index(drop=True)
 
     if subgroups_df.empty:

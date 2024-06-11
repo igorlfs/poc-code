@@ -60,7 +60,6 @@ def subgroups_dropdown(
                         id="subgroups-dropdown",
                         value=[],
                         multi=True,
-                        placeholder="Selecionar...",
                     ),
                 ],
             ),

@@ -12,7 +12,7 @@ class Interval:
     upper: float
 
 
-message_for_not_implemented_exception = "I still can't deal with non numeric features!"
+message_for_not_implemented_exception = "I can't deal with non numeric features!"
 
 
 def extract_subgroup_limits(
