@@ -127,6 +127,8 @@ def threshold(  # noqa: C901
             subgroups_df, selected_subgroups, filtered_subgroups
         )
 
+    interval_splits = [round(min_x + i * (max_x - min_x) / 5, 2) for i in range(6)]
+
     return Div(
         className="flex justify-center items-center mt-8",
         children=[
@@ -138,19 +140,10 @@ def threshold(  # noqa: C901
                 id="slider-threshold",
                 className="w-[500px]",
                 value=None,
-                min=0,
-                max=1,
+                min=min_x,
+                max=max_x,
                 step=0.01,
-                # No, we can't be smarter here
-                # https://community.plotly.com/t/dcc-slider-right-most-label-mark-is-missing/27274
-                marks={
-                    0: "0",
-                    0.2: "0.2",
-                    0.4: "0.4",
-                    0.6: "0.6",
-                    0.8: "0.8",
-                    1: "1",
-                },
+                marks={i: f"{i:.2f}" for i in interval_splits},
             ),
             html.Button(
                 style={"display": "none"},
