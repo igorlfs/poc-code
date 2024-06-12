@@ -54,12 +54,14 @@ def generate_dendrogram_figure(
         fig.add_vline(x=pos_x, line_width=4, line_color=WHITE)
 
     fig.update_layout(
+        title="<b>COVERAGE DIFFERENCE BETWEEN SUBGROUPS</b>",
+        title_x=0.5,
         width=800,
         height=600,
         plot_bgcolor=CRUST,
         paper_bgcolor="rgba(0,0,0,0)",
         font_color=WHITE,
-        margin={"l": 0, "r": 0, "t": 0, "b": 0},
+        margin={"l": 0, "r": 0, "t": 30, "b": 0},
     )
     fig.update_xaxes(range=[0, 1.1], showticklabels=True)
 

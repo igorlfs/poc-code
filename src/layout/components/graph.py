@@ -85,11 +85,17 @@ def render_graph_and_subgroups(
         title=y_column, gridcolor=MANTLE, zerolinecolor=MANTLE, zerolinewidth=3
     )
 
+    title_warning = ""
+    if subgroups is None:
+        title_warning = " (none selected)"
+
     fig.update_layout(
+        title=f"<b>Subgroups for {x_column} × {y_column}</b>{title_warning}",  # noqa: RUF001
+        title_x=0.5,
         font_color=WHITE,
         plot_bgcolor=CRUST,
         paper_bgcolor="rgba(0,0,0,0)",
-        margin={"l": 0, "r": 0, "t": 0, "b": 0},
+        margin={"l": 0, "r": 0, "t": 30, "b": 0},
     )
 
     # if subgroup is None, plot only the data
