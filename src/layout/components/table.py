@@ -4,11 +4,9 @@ from pandas import DataFrame
 from src.colors import BACKGROUND, CRUST, MANTLE, WHITE
 
 
-def data_table(subgroups_df: DataFrame, current_class: str) -> DataTable:
+def data_table(subgroups_df: DataFrame) -> DataTable:
     table_subgroups_df = DataFrame(
-        subgroups_df.query(f"`class` == '{current_class}'")[
-            ["subgroup_str", "size_sg", "mean_sg", "quality"]
-        ]
+        subgroups_df[["subgroup_str", "size_sg", "mean_sg", "quality"]]
     ).rename(
         columns={
             "subgroup_str": "Subgroup",

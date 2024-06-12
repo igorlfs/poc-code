@@ -11,9 +11,7 @@ from src.layout.components.util import get_clustering
 
 
 def threshold(  # noqa: C901
-    app: Dash,
-    subgroups_df: DataFrame,
-    current_class: str,
+    app: Dash, subgroups_df: DataFrame, min_x: float, max_x: float
 ) -> Div:
     @app.callback(
         Output("slider-threshold", "value"),
@@ -34,7 +32,7 @@ def threshold(  # noqa: C901
         Output("dendrogram-graph", "figure"), Input("slider-threshold", "value")
     )
     def display_graph(pos_x: float | None) -> Figure:
-        return generate_dendrogram_figure(subgroups_df, current_class, pos_x)
+        return generate_dendrogram_figure(subgroups_df, pos_x)[0]
 
     def _filter(subgroup: Conjunction, x_column: str, y_column: str) -> bool:
         x: str = subgroup.selectors[0].attribute_name
@@ -67,10 +65,8 @@ def threshold(  # noqa: C901
         Input("subgroups-dropdown", "value"),
     )
     def filter_subgroups(pos_x: float, selected_subgroups: list[str]) -> list[str]:
-        current_class_df = subgroups_df.query(f"`class` == '{current_class}'")
-
-        all_subgroups_class = current_class_df["subgroup"].tolist()
-        all_subgroups_str_class = current_class_df["subgroup_str"].tolist()
+        all_subgroups_class = subgroups_df["subgroup"].tolist()
+        all_subgroups_str_class = subgroups_df["subgroup_str"].tolist()
 
         if pos_x is None:
             if len(selected_subgroups) == 0:
@@ -80,10 +76,10 @@ def threshold(  # noqa: C901
                 raise PreventUpdate
 
             return extract_first_subgroup_and_filter(
-                current_class_df, selected_subgroups, all_subgroups_class
+                subgroups_df, selected_subgroups, all_subgroups_class
             )
 
-        clustering, _ = get_clustering(current_class_df)
+        clustering, _ = get_clustering(subgroups_df)
 
         n_samples = len(clustering.labels_)
         dict_nodes = {}  # Save the representative subgroup for each merge
@@ -104,15 +100,15 @@ def threshold(  # noqa: C901
                 else clustering.children_[i][1]
             )
 
-            if current_class_df.loc[j, "quality"] > current_class_df.loc[k, "quality"]:
+            if subgroups_df.loc[j, "quality"] > subgroups_df.loc[k, "quality"]:
                 dict_nodes[i] = j
-                subgroup_replacements[current_class_df.loc[k, "subgroup"]] = (
-                    current_class_df.loc[j, "subgroup"]
+                subgroup_replacements[subgroups_df.loc[k, "subgroup"]] = (
+                    subgroups_df.loc[j, "subgroup"]
                 )
             else:
                 dict_nodes[i] = k
-                subgroup_replacements[current_class_df.loc[j, "subgroup"]] = (
-                    current_class_df.loc[k, "subgroup"]
+                subgroup_replacements[subgroups_df.loc[j, "subgroup"]] = (
+                    subgroups_df.loc[k, "subgroup"]
                 )
 
         filtered_subgroups = set(subgroup_replacements.values()) - set(
@@ -128,7 +124,7 @@ def threshold(  # noqa: C901
             raise PreventUpdate
 
         return extract_first_subgroup_and_filter(
-            current_class_df, selected_subgroups, filtered_subgroups
+            subgroups_df, selected_subgroups, filtered_subgroups
         )
 
     return Div(

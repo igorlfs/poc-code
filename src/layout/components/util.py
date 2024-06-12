@@ -23,13 +23,13 @@ def calculate_jaccard_similarity(
 
 
 def get_clustering(
-    df_for_current_class: DataFrame,
-) -> [AgglomerativeClustering, NDArray]:
+    subgroups_df: DataFrame,
+) -> tuple[AgglomerativeClustering, NDArray]:
     # create linkage matrix and then plot the dendrogram
     jaccard_generator = (
         calculate_jaccard_similarity(row1, row2)
         for row1, row2 in combinations(
-            zip(df_for_current_class["covered"], df_for_current_class["subgroup"]), 2
+            zip(subgroups_df["covered"], subgroups_df["subgroup"]), 2
         )
     )
     flattened_matrix = np.fromiter(jaccard_generator, dtype=float)

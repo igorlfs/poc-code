@@ -47,8 +47,10 @@ def run() -> None:
     features = dataset_df.columns.tolist()
     features.remove(target_column)
     dataset_with_errors_df = pd.concat([dataset_df, errors_df], axis=1)
-    df_list = subgroup_discovery(dataset_df, errors_df, 20, target_column)
-    subgroups_df = remove_redundant_subgroups(df_list)
+    subgroups_df = subgroup_discovery(
+        dataset_df, errors_df, 20, target_column, current_class
+    )
+    subgroups_df = remove_redundant_subgroups(subgroups_df)
 
     # Remove subgroups with only group, so we don't have to worry about visualization
     subgroups_df = subgroups_df[
@@ -83,7 +85,6 @@ def run() -> None:
         dataset_with_errors_df,
         features,
         subgroups_df,
-        current_class,
         target_column,
     )
 

@@ -15,9 +15,9 @@ def create_layout(
     dataset_with_errors_df: DataFrame,
     features: list[str],
     subgroups_df: DataFrame,
-    current_class: str,
     target_column: str,
 ) -> Div:
+    dendrogram, min_x, max_x = generate_dendrogram_figure(subgroups_df, None)
     return Div(
         className="flex-col mt-12",
         children=[
@@ -28,26 +28,24 @@ def create_layout(
                         children=[
                             Div(
                                 className="flex justify-center items-center",
-                                children=[data_table(subgroups_df, current_class)],
+                                children=[data_table(subgroups_df)],
                             ),
                             Div(
                                 className="flex flex-col items-center mt-10 xl:mt-0",
                                 children=[
                                     Graph(
                                         id="dendrogram-graph",
-                                        figure=generate_dendrogram_figure(
-                                            subgroups_df, current_class
-                                        ),
+                                        figure=dendrogram,
                                     ),
                                 ],
                             ),
                         ],
                     ),
-                    threshold(app, subgroups_df, current_class),
+                    threshold(app, subgroups_df, min_x, max_x),
                     subgroups_dropdown(
                         app,
                         dataset_with_errors_df,
-                        subgroups_df.query(f"`class` == '{current_class}'"),
+                        subgroups_df,
                         target_column,
                     ),
                     plot_graph_and_subgroups(

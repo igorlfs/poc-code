@@ -1,18 +1,15 @@
 from collections import defaultdict
 
-import pandas as pd
 from pandas import DataFrame
 
 
 # Reducing the redundancy in the subgroups mined, by unifying the names of equal coverage subgroup descriptions
-def remove_redundant_subgroups(df_list: list[DataFrame]) -> DataFrame:
-    df_rules = pd.concat(df_list, ignore_index=True)
-
+def remove_redundant_subgroups(subgroups_df: DataFrame) -> DataFrame:
     # Use defaultdict to store coverage sets by subgroup
     subgroup_coverages = defaultdict(set)
 
     # Iterate through DataFrame rows and update coverage sets
-    for _, row in df_rules.iterrows():
+    for _, row in subgroups_df.iterrows():
         subgroup = row["subgroup"]
         covered = set(row["covered"])
 
@@ -33,6 +30,6 @@ def remove_redundant_subgroups(df_list: list[DataFrame]) -> DataFrame:
     }
 
     # Replace duplicate subgroups with their originals
-    df_rules["subgroup"] = df_rules["subgroup"].replace(subgroup_map)
+    subgroups_df["subgroup"] = subgroups_df["subgroup"].replace(subgroup_map)
 
-    return df_rules
+    return subgroups_df
