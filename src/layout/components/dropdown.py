@@ -1,4 +1,4 @@
-from dash import Dash, Input, Output, State
+from dash import Input, Output, State, callback
 from dash.dash import PreventUpdate
 from dash.dcc import Dropdown
 from dash.html import Button, Div
@@ -9,12 +9,11 @@ from src.layout.components.graph import plot_graph_and_subgroups
 
 
 def subgroups_dropdown(
-    app: Dash,
     dataset_with_errors_df: DataFrame,
     subgroups_df: DataFrame,
     target_column: str,
 ) -> Div:
-    @app.callback(
+    @callback(
         Output("subgroups-plot", "figure"),
         Input("plot-subgroups-button", "n_clicks"),
         State("subgroups-dropdown", "value"),

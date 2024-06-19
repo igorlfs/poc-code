@@ -1,4 +1,4 @@
-from dash import Dash, Input, Output, dcc, html
+from dash import Input, Output, callback, dcc, html
 from dash.exceptions import PreventUpdate
 from dash.html import Div
 from pandas import DataFrame
@@ -10,17 +10,15 @@ from src.layout.components.dendrogram import generate_dendrogram_figure
 from src.layout.components.util import get_clustering
 
 
-def threshold(  # noqa: C901
-    app: Dash, subgroups_df: DataFrame, min_x: float, max_x: float
-) -> Div:
-    @app.callback(
+def threshold(subgroups_df: DataFrame, min_x: float, max_x: float) -> Div:  # noqa: C901
+    @callback(
         Output("slider-threshold", "value"),
         Input("clear-threshold-button", "n_clicks"),
     )
     def click_clear_threshold(_: int) -> None:
         return None
 
-    @app.callback(
+    @callback(
         Output("clear-threshold-button", "style"), Input("slider-threshold", "value")
     )
     def show_clear_button(pos_x: float | None) -> dict:
@@ -28,9 +26,7 @@ def threshold(  # noqa: C901
             return {"display": "none"}
         return {}
 
-    @app.callback(
-        Output("dendrogram-graph", "figure"), Input("slider-threshold", "value")
-    )
+    @callback(Output("dendrogram-graph", "figure"), Input("slider-threshold", "value"))
     def display_graph(pos_x: float | None) -> Figure:
         return generate_dendrogram_figure(subgroups_df, pos_x)[0]
 
@@ -59,7 +55,7 @@ def threshold(  # noqa: C901
 
         return [str(x) for x in list(subgroups_filtered)]
 
-    @app.callback(
+    @callback(
         Output("subgroups-dropdown", "options"),
         Input("slider-threshold", "value"),
         Input("subgroups-dropdown", "value"),

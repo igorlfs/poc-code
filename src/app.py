@@ -81,7 +81,6 @@ def run() -> None:
     app.title = "Heisenpy"  # TODO temporary name
 
     app.layout = create_layout(
-        app,
         dataset_with_errors_df,
         features,
         subgroups_df,

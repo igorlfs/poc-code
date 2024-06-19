@@ -1,4 +1,3 @@
-from dash import Dash
 from dash.dcc import Graph
 from dash.html import Div
 from pandas import DataFrame
@@ -11,7 +10,6 @@ from src.layout.components.threshold import threshold
 
 
 def create_layout(
-    app: Dash,
     dataset_with_errors_df: DataFrame,
     features: list[str],
     subgroups_df: DataFrame,
@@ -41,9 +39,8 @@ def create_layout(
                             ),
                         ],
                     ),
-                    threshold(app, subgroups_df, min_x, max_x),
+                    threshold(subgroups_df, min_x, max_x),
                     subgroups_dropdown(
-                        app,
                         dataset_with_errors_df,
                         subgroups_df,
                         target_column,
