@@ -56,7 +56,6 @@ def data_table(subgroups_df: DataFrame) -> DataTable:
             {"if": {"column_id": "Tamanho"}, "textAlign": "right"},
             {"if": {"column_id": "Subgrupo"}, "textAlign": "left"},
         ],
-        page_size=20,
         cell_selectable=False,
-        style_table={"height": "30%", "overflowY": "auto"},
+        style_table={"height": "600px", "overflowY": "auto"},
     )
