@@ -1,3 +1,4 @@
+from dash import html
 from dash.dcc import Graph
 from dash.html import Div
 from pandas import DataFrame
@@ -14,13 +15,18 @@ def create_layout(
     features: list[str],
     subgroups_df: DataFrame,
     target_column: str,
+    current_class: str,
 ) -> Div:
     dendrogram, min_x, max_x = generate_dendrogram_figure(subgroups_df, None)
     return Div(
-        className="flex-col mt-12",
+        className="flex-col mt-6",
         children=[
             Div(
                 children=[
+                    html.H2(
+                        f"Uncertainty Regions for {current_class}",
+                        className="text-center mb-6",
+                    ),
                     Div(
                         className="flex xl:flex-row-reverse xl:place-content-evenly flex-col",
                         children=[

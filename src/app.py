@@ -85,6 +85,7 @@ def run() -> None:
         features,
         subgroups_df,
         target_column,
+        current_class,
     )
 
     app.run()
