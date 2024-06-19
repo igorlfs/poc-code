@@ -60,7 +60,7 @@ def generate_dendrogram_figure(
         font_color=WHITE,
         margin={"l": 0, "r": 0, "t": 30, "b": 0},
     )
-    min_x = max(min(i for i in clustering.distances_ if i > 0) - 0.1, 0)
+    min_x = max(min(clustering.distances_) - 0.1, 0)
     max_x = max(clustering.distances_) + 0.05
     fig.update_xaxes(range=[min_x, max_x], showticklabels=True)
 
