@@ -26,7 +26,7 @@ def get_dfs(dataset_path: str, errors_path: str) -> None | tuple[DataFrame, Data
 
 
 def run() -> None:
-    dataset_file_path, errors_file_path, target_column, current_class = get_args()
+    dataset_file_path, errors_file_path, target_column, current_class, size = get_args()
     dfs = get_dfs(dataset_file_path, errors_file_path)
     if dfs is None:
         return
@@ -48,7 +48,7 @@ def run() -> None:
     features.remove(target_column)
     dataset_with_errors_df = pd.concat([dataset_df, errors_df], axis=1)
     subgroups_df = subgroup_discovery(
-        dataset_df, errors_df, 20, target_column, current_class
+        dataset_df, errors_df, size, target_column, current_class
     )
     subgroups_df = remove_redundant_subgroups(subgroups_df)
 

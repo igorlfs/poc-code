@@ -22,6 +22,6 @@ def subgroup_discovery(
         depth=2,
         qf=BidirectionalQFNumeric(a=0.5),
     )
-    df_rules = ps.BeamSearch().execute(task=task).to_dataframe()
+    df_rules = ps.BeamSearch(beam_width=set_size).execute(task=task).to_dataframe()
     df_rules["covered"] = df_rules["subgroup"].apply(lambda x: x.covers(merged_df))
     return df_rules

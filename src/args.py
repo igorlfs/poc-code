@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 
-def get_args() -> tuple[Path, Path, str, str]:
+def get_args() -> tuple[Path, Path, str, str, int]:
     argparser = ArgumentParser(description="Visualize uncertainty regions in ML models")
     argparser.add_argument(
         "-d", "--data", dest="data", required=True, type=Path, help="Path to dataset"
@@ -32,5 +32,14 @@ def get_args() -> tuple[Path, Path, str, str]:
         type=str,
         help="Current Class",
     )
+    argparser.add_argument(
+        "-n",
+        "--number",
+        dest="size",
+        type=int,
+        required=False,
+        help="Number of max subgroups to generate",
+        default=20,
+    )
     args = argparser.parse_args()
-    return (args.data, args.errors, args.target, args.currrent_class)
+    return (args.data, args.errors, args.target, args.currrent_class, args.size)
