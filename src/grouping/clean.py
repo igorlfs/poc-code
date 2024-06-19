@@ -33,4 +33,6 @@ def remove_redundant_subgroups(subgroups_df: DataFrame) -> DataFrame:
             else:
                 rule_map[rule] = first_rule
 
-    return subgroups_df.replace({"subgroup": rule_map})
+    return subgroups_df.replace({"subgroup": rule_map}).drop_duplicates(
+        subset="subgroup"
+    )
