@@ -10,6 +10,18 @@ from src.layout.components.dendrogram import generate_dendrogram_figure
 from src.layout.components.util import get_clustering
 
 
+def generate_decimals(a: float, b: float) -> list[float]:
+    decimals = [a]
+    step = 0.1
+    current = a + step
+
+    while current < b:
+        decimals.append(round(current, 1))
+        current += step
+
+    return [*decimals, b]
+
+
 def threshold(subgroups_df: DataFrame, min_x: float, max_x: float) -> Div:  # noqa: C901
     @callback(
         Output("slider-threshold", "value"),
@@ -123,7 +135,7 @@ def threshold(subgroups_df: DataFrame, min_x: float, max_x: float) -> Div:  # no
             subgroups_df, selected_subgroups, filtered_subgroups
         )
 
-    interval_splits = [round(min_x + i * (max_x - min_x) / 5, 2) for i in range(6)]
+    interval_splits = generate_decimals(min_x, max_x)
 
     return Div(
         className="flex justify-center items-center mt-8",
@@ -136,8 +148,8 @@ def threshold(subgroups_df: DataFrame, min_x: float, max_x: float) -> Div:  # no
                 id="slider-threshold",
                 className="w-[60%]",
                 value=None,
-                min=min_x + 0.1,
-                max=max_x - 0.05,
+                min=min_x,
+                max=max_x,
                 step=0.01,
                 marks={i: f"{i:.2f}" for i in interval_splits},
             ),
