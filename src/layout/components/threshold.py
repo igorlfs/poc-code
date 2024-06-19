@@ -138,10 +138,10 @@ def threshold(  # noqa: C901
             ),
             dcc.Slider(
                 id="slider-threshold",
-                className="w-[500px]",
+                className="w-[60%]",
                 value=None,
-                min=min_x,
-                max=max_x,
+                min=min_x + 0.1,
+                max=max_x - 0.05,
                 step=0.01,
                 marks={i: f"{i:.2f}" for i in interval_splits},
             ),
