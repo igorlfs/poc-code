@@ -58,5 +58,5 @@ def data_table(subgroups_df: DataFrame) -> DataTable:
             {"if": {"column_id": "Subgroup"}, "textAlign": "left"},
         ],
         cell_selectable=False,
-        style_table={"height": "600px", "overflowY": "auto"},
+        style_table={"maxHeight": "600px", "overflowY": "auto"},
     )

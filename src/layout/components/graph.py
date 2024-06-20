@@ -160,3 +160,11 @@ def render_subgroups(
             xanchor="left",
             yanchor="bottom",
         )
+        fig.add_annotation(
+            x=x_init + width / 2,
+            y=y_init + height / 2,
+            text=f"<b>{subgroup!s}</b>",
+            bgcolor=BACKGROUND,
+            opacity=0.5,
+            showarrow=False,
+        )
