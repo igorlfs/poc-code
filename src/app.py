@@ -63,8 +63,6 @@ def run() -> None:
         print("No subgroups have been found")
         return
 
-    # adding string column with rules
-    subgroups_df["subgroup_str"] = subgroups_df["subgroup"].astype(str)
     # adding columns for axis of each rule
     subgroups_df["x_column"] = subgroups_df["subgroup"].apply(
         lambda x: x.selectors[0].attribute_name

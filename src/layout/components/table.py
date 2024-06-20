@@ -6,15 +6,16 @@ from src.colors import BACKGROUND, CRUST, MANTLE, WHITE
 
 def data_table(subgroups_df: DataFrame) -> DataTable:
     table_subgroups_df = DataFrame(
-        subgroups_df[["subgroup_str", "size_sg", "mean_sg", "quality"]]
+        subgroups_df[["subgroup", "size_sg", "mean_sg", "quality"]]
     ).rename(
         columns={
-            "subgroup_str": "Subgroup",
+            "subgroup": "Subgroup",
             "size_sg": "Size",
             "mean_sg": "Avg Error",
             "quality": "Quality",
         }
     )
+    table_subgroups_df["Subgroup"] = table_subgroups_df["Subgroup"].astype(str)
 
     return DataTable(
         id="rules_table",
@@ -52,9 +53,9 @@ def data_table(subgroups_df: DataFrame) -> DataTable:
         style_data_conditional=[
             {"if": {"row_index": "odd"}, "backgroundColor": CRUST},
             {"if": {"row_index": "even"}, "backgroundColor": MANTLE},
-            {"if": {"column_id": "Qualidade"}, "textAlign": "right"},
-            {"if": {"column_id": "Tamanho"}, "textAlign": "right"},
-            {"if": {"column_id": "Subgrupo"}, "textAlign": "left"},
+            {"if": {"column_id": "Quality"}, "textAlign": "right"},
+            {"if": {"column_id": "Size"}, "textAlign": "right"},
+            {"if": {"column_id": "Subgroup"}, "textAlign": "left"},
         ],
         cell_selectable=False,
         style_table={"height": "600px", "overflowY": "auto"},

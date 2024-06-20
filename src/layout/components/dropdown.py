@@ -29,13 +29,14 @@ def subgroups_dropdown(
         if len(selected_subgroups) == 0:
             raise PreventUpdate
 
-        selected_subgroup_rows = subgroups_df.query(
-            "subgroup_str in @selected_subgroups"
-        ).index.tolist()
+        selected_subgroup_rows = subgroups_df["subgroup"].apply(
+            lambda x: str(x) in selected_subgroups
+        )
 
-        first_subgroup = subgroups_df.query(
-            f"subgroup_str == '{selected_subgroups[0]}'"
-        )[["x_column", "y_column"]]
+        first_subgroup_filter = subgroups_df["subgroup"].apply(
+            lambda x: str(x) == selected_subgroups[0]
+        )
+        first_subgroup = subgroups_df.loc[first_subgroup_filter]
 
         columns = first_subgroup.iloc[0].to_dict()
 

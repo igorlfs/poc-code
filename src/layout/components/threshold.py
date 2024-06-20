@@ -34,9 +34,10 @@ def extract_first_subgroup_and_filter(
     current_groups: set[Conjunction] | list[Conjunction],
 ) -> list[str]:
     # get first subgroup cause it is the only one
-    first_subgroup = current_class_df.query(
-        f"subgroup_str == '{selected_subgroups[0]}'"
-    )[["x_column", "y_column"]]
+    first_subgroup_filter = current_class_df["subgroup"].apply(
+        lambda x: str(x) == selected_subgroups[0]
+    )
+    first_subgroup = current_class_df.loc[first_subgroup_filter]
 
     # get first line cause it's the only one
     columns = first_subgroup.iloc[0].to_dict()
@@ -75,18 +76,17 @@ def threshold(subgroups_df: DataFrame, min_x: float, max_x: float) -> Div:  # no
         Input("subgroups-dropdown", "value"),
     )
     def filter_subgroups(pos_x: float, selected_subgroups: list[str]) -> list[str]:
-        all_subgroups_class = subgroups_df["subgroup"].tolist()
-        all_subgroups_str_class = subgroups_df["subgroup_str"].tolist()
+        all_subgroups = subgroups_df["subgroup"].tolist()
 
         if pos_x is None:
             if len(selected_subgroups) == 0:
-                return all_subgroups_str_class
+                return [str(x) for x in all_subgroups]
 
             if len(selected_subgroups) > 1:
                 raise PreventUpdate
 
             return extract_first_subgroup_and_filter(
-                subgroups_df, selected_subgroups, all_subgroups_class
+                subgroups_df, selected_subgroups, all_subgroups
             )
 
         clustering, _ = get_clustering(subgroups_df)
