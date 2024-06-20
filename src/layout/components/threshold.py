@@ -22,50 +22,52 @@ def generate_decimals(a: float, b: float) -> list[float]:
     return [*decimals, b]
 
 
+def _filter(subgroup: Conjunction, x_column: str, y_column: str) -> bool:
+    x: str = subgroup.selectors[0].attribute_name
+    y: str = subgroup.selectors[1].attribute_name
+    return (x == x_column and y == y_column) ^ (y == x_column and x == y_column)
+
+
+def extract_first_subgroup_and_filter(
+    current_class_df: DataFrame,
+    selected_subgroups: list[str],
+    current_groups: set[Conjunction] | list[Conjunction],
+) -> list[str]:
+    # get first subgroup cause it is the only one
+    first_subgroup = current_class_df.query(
+        f"subgroup_str == '{selected_subgroups[0]}'"
+    )[["x_column", "y_column"]]
+
+    # get first line cause it's the only one
+    columns = first_subgroup.iloc[0].to_dict()
+
+    subgroups_filtered = filter(
+        lambda sg: _filter(sg, columns["x_column"], columns["y_column"]),
+        current_groups,
+    )
+
+    return [str(x) for x in list(subgroups_filtered)]
+
+
+@callback(
+    Output("slider-threshold", "value"),
+    Input("clear-threshold-button", "n_clicks"),
+)
+def click_clear_threshold(_: int) -> None:
+    return None
+
+
+@callback(Output("clear-threshold-button", "style"), Input("slider-threshold", "value"))
+def show_clear_button(pos_x: float | None) -> dict:
+    if pos_x is None:
+        return {"display": "none"}
+    return {}
+
+
 def threshold(subgroups_df: DataFrame, min_x: float, max_x: float) -> Div:  # noqa: C901
-    @callback(
-        Output("slider-threshold", "value"),
-        Input("clear-threshold-button", "n_clicks"),
-    )
-    def click_clear_threshold(_: int) -> None:
-        return None
-
-    @callback(
-        Output("clear-threshold-button", "style"), Input("slider-threshold", "value")
-    )
-    def show_clear_button(pos_x: float | None) -> dict:
-        if pos_x is None:
-            return {"display": "none"}
-        return {}
-
     @callback(Output("dendrogram-graph", "figure"), Input("slider-threshold", "value"))
     def display_graph(pos_x: float | None) -> Figure:
         return generate_dendrogram_figure(subgroups_df, pos_x)[0]
-
-    def _filter(subgroup: Conjunction, x_column: str, y_column: str) -> bool:
-        x: str = subgroup.selectors[0].attribute_name
-        y: str = subgroup.selectors[1].attribute_name
-        return (x == x_column and y == y_column) ^ (y == x_column and x == y_column)
-
-    def extract_first_subgroup_and_filter(
-        current_class_df: DataFrame,
-        selected_subgroups: list[str],
-        current_groups: set[Conjunction] | list[Conjunction],
-    ) -> list[str]:
-        # get first subgroup cause it is the only one
-        first_subgroup = current_class_df.query(
-            f"subgroup_str == '{selected_subgroups[0]}'"
-        )[["x_column", "y_column"]]
-
-        # get first line cause it's the only one
-        columns = first_subgroup.iloc[0].to_dict()
-
-        subgroups_filtered = filter(
-            lambda sg: _filter(sg, columns["x_column"], columns["y_column"]),
-            current_groups,
-        )
-
-        return [str(x) for x in list(subgroups_filtered)]
 
     @callback(
         Output("subgroups-dropdown", "options"),
