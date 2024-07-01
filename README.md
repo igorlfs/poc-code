@@ -12,12 +12,13 @@ uv pip install -r requirements.txt
 
 ## Input
 
-There are 4 parameters, 3 of which are required:
+There are 5 parameters, 3 of which are required:
 
-- A CSV containing the dataset.
-- A CSV containing the model's errors. Each instance should have an error associated with each class. You can use a binary approach: if the prediction for a given instance is right, all of it's errors are zero. Otherwise, if the prediction is wrong, the all of it's errors are zero **except for the actual class**, which receives an error of one.
+- A CSV containing the dataset. **(required)**
+- A CSV containing the model's errors. Each instance should have an error associated with each class. You can use a binary approach: if the prediction for a given instance is right, all of it's errors are zero. Otherwise, if the prediction is wrong, the all of it's errors are zero **except for the actual class**, which receives an error of one. **(required)**
 - The dataset's column that represents the output. By default, it's "target".
-- A class from the dataset, to filter the subgroups for that specific class.
+- The maximum number of subgroups to generate. By default, it's 20.
+- A class from the dataset, to filter the subgroups for that specific class. **(required)**
 
 This repo contains a sample dataset (iris) and a model's errors to provide an example execution:
 
